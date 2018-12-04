@@ -23,13 +23,16 @@ window.onload = function() {
   ];
 
   const rootElement = document.getElementById('root');
+  const toDoForm = document.getElementById('form');
+  const input = document.getElementById('input');
 
-  function createToDo(content, done) {
+  function createToDoElement(content, done) {
     const id = content.split(' ').join('');
     const div = document.createElement('div');
     const input = document.createElement('input');
     input.setAttribute('type', 'checkbox');
     input.setAttribute('id', id);
+    input.checked = !!done;
     const label = document.createElement('label');
     label.setAttribute('for', id);
     const text = document.createTextNode(content);
@@ -46,15 +49,31 @@ window.onload = function() {
   };
 
   function render() {
-    const toDoListElements = createToDoList(state, createToDo);
+    const toDoListElements = createToDoList(state, createToDoElement);
     toDoListElements.forEach(function(element) {
       rootElement.appendChild(element);
     });
   }
 
-  function clearList() {
-    rootElement.innerHTML = '';
+  function addToDo(content) {
+    state.push({
+      content: content,
+      done: false,
+    });
   }
+
+  toDoForm.addEventListener('submit', function() {
+    // stop the form from reloading the page
+    event.preventDefault();
+    // get the value in the input field and save it
+    addToDo(input.value);
+    // clear the input field
+    input.value = '';
+    // clear the todos
+    rootElement.innerHTML = '';
+    // render the new list
+    render();
+  })
 
   render();
 };

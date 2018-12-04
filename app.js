@@ -3,22 +3,27 @@ window.onload = function() {
     {
       done: true,
       content: 'Book the car in for a service with the mechanic',
+      id: 'bookthecar',
     },
     {
       done: false,
       content: 'Put the xmas tree up',
+      id: 'putthexmas',
     },
     {
       done: true,
       content: 'Go to the gym',
+      id: 'gotothegym',
     },
     {
       done: false,
       content: 'Call mum',
+      id: 'callmum',
     },
     {
       done: false,
       content: 'Do the dishes',
+      id: 'dothedishes',
     },
   ];
 
@@ -26,25 +31,32 @@ window.onload = function() {
   const toDoForm = document.getElementById('form');
   const input = document.getElementById('input');
 
-  function createToDoElement(content, done) {
-    const id = content.split(' ').join('');
+  function createId(content) {
+    return content.split(' ').join('');
+  }
+
+  function createToDoElement(content, done, id) {
     const div = document.createElement('div');
     const input = document.createElement('input');
     input.setAttribute('type', 'checkbox');
     input.setAttribute('id', id);
-    input.checked = !!done;
+    input.checked = done;
+    input.addEventListener('change', toggleDone);
+    const wrapper = done ? 'del' : 'span';
+    const labelWrapper = document.createElement(wrapper);
     const label = document.createElement('label');
     label.setAttribute('for', id);
     const text = document.createTextNode(content);
     label.appendChild(text);
+    labelWrapper.appendChild(label);
     div.appendChild(input);
-    div.appendChild(label);
+    div.appendChild(labelWrapper);
     return div;
   };
 
   function createToDoList(toDos, elementMaker) {
     return toDos.map(function(toDo) {
-      return elementMaker(toDo.content, toDo.done);
+      return elementMaker(toDo.content, toDo.done, toDo.id);
     });
   };
 
@@ -59,20 +71,32 @@ window.onload = function() {
     state.push({
       content: content,
       done: false,
+      id: createId(content),
     });
   }
+
+  function reRender() {
+    addToDo(input.value);
+    input.value = '';
+    rootElement.innerHTML = '';
+    render();
+  }
+
+  function toggleDone(event) {
+    state.forEach(function(toDo) {
+      if(event.target.id === toDo.id){
+        toDo.done = !toDo.done;
+      }
+    });
+    rootElement.innerHTML = '';
+    render();
+  }
+
 
   toDoForm.addEventListener('submit', function() {
     // stop the form from reloading the page
     event.preventDefault();
-    // get the value in the input field and save it
-    addToDo(input.value);
-    // clear the input field
-    input.value = '';
-    // clear the todos
-    rootElement.innerHTML = '';
-    // render the new list
-    render();
+    reRender();
   })
 
   render();

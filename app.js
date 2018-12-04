@@ -25,10 +25,18 @@ window.onload = function() {
   const rootElement = document.getElementById('root');
 
   function createToDo(content, done) {
-    const listElement = document.createElement('li');
-    const textElement = document.createTextNode(content);
-    listElement.appendChild(textElement);
-    return listElement;
+    const id = content.split(' ').join('');
+    const div = document.createElement('div');
+    const input = document.createElement('input');
+    input.setAttribute('type', 'checkbox');
+    input.setAttribute('id', id);
+    const label = document.createElement('label');
+    label.setAttribute('for', id);
+    const text = document.createTextNode(content);
+    label.appendChild(text);
+    div.appendChild(input);
+    div.appendChild(label);
+    return div;
   };
 
   function createToDoList(toDos, elementMaker) {
@@ -42,6 +50,10 @@ window.onload = function() {
     toDoListElements.forEach(function(element) {
       rootElement.appendChild(element);
     });
+  }
+
+  function clearList() {
+    rootElement.innerHTML = '';
   }
 
   render();

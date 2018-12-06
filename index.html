@@ -3,24 +3,27 @@
   <head>
     <meta charset="UTF-8">
       <title>To Do List</title>
+      <link href="./style.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <h1>Vanilla JS to do list</h1>
-    <form id="form">
-      <input id="input" type="text">
-      <input type="submit">
-    </form>
-    <div id="root">
-      <!--
-      <div>
-        <input id="1" type="checkbox" checked>
-        <del>
-          <label for="1">First thing</label>
-        </del>
-        <button id="delete-1">&#10006;</button>
+    <div class="box">
+      <h1>Vanilla JS to do list</h1>
+      <form id="form">
+        <input id="input" type="text" placeholder="What needs to be done?">
+        <input type="submit" id="submit">
+      </form>
+      <div id="root">
+        <!--
+        <div>
+          <input id="1" type="checkbox" checked>
+          <del>
+            <label for="1">First thing</label>
+          </del>
+          <button id="delete-1">&#10006;</button>
+        </div>
+        -->
       </div>
-      -->
+      <script src="./app.js"></script>
     </div>
-    <script src="./app.js"></script>
   </body>
   </html>

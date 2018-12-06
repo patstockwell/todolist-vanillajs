@@ -1,0 +1,48 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 100;
+}
+
+h1 {
+  font-weight: 100;
+  font-size: 50px;
+}
+
+#submit {
+  display: none;
+}
+
+#input:focus{
+    outline: none;
+}
+
+#input::placeholder {
+  color: #ddd;
+}
+
+#input {
+  font-size: 30px;
+  font-weight: 100;
+  margin: 20px 0;
+  width: 100%;
+  padding: 10px;
+}
+
+del {
+  color: #ccc;
+}
+
+.box {
+  width: 500px;
+  margin: auto;
+}
+
+input[type=checkbox] {
+  margin: 7px 10px;
+}
+
+button {
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+}

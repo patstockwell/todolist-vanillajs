@@ -70,7 +70,7 @@ window.onload = function() {
   function createDeleteButton(id) {
     const deleteButton = document.createElement('button');
     deleteButton.setAttribute('id', 'delete-' + id);
-    deleteButton.innerHTML = '&#10006;';
+    deleteButton.innerHTML = '&#10005;';
     deleteButton.addEventListener('click', handleDeleteClick);
     return deleteButton;
   }

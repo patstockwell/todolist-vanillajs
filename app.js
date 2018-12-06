@@ -37,22 +37,43 @@ window.onload = function() {
 
   function createToDoElement(content, done, id) {
     const div = document.createElement('div');
+    const checkBox = createCheckbox(done, id, handleCheckboxClick);
+    const label = createLabel(content, done, id);
+    const deleteButton = createDeleteButton(id);
+
+    div.appendChild(checkBox);
+    div.appendChild(label);
+    div.appendChild(deleteButton);
+    return div;
+  };
+
+  function createCheckbox(done, id, listener) {
     const input = document.createElement('input');
     input.setAttribute('type', 'checkbox');
     input.setAttribute('id', id);
     input.checked = done;
-    input.addEventListener('change', toggleDone);
-    const wrapper = done ? 'del' : 'span';
-    const labelWrapper = document.createElement(wrapper);
+    input.addEventListener('change', listener);
+    return input;
+  }
+
+  function createLabel(content, done, id) {
+    const wrapperText = done ? 'del' : 'span';
+    const labelWrapper = document.createElement(wrapperText);
     const label = document.createElement('label');
     label.setAttribute('for', id);
-    const text = document.createTextNode(content);
-    label.appendChild(text);
+    const labelText = document.createTextNode(content);
+    label.appendChild(labelText);
     labelWrapper.appendChild(label);
-    div.appendChild(input);
-    div.appendChild(labelWrapper);
-    return div;
-  };
+    return labelWrapper;
+  }
+
+  function createDeleteButton(id) {
+    const deleteButton = document.createElement('button');
+    deleteButton.setAttribute('id', 'delete-' + id);
+    deleteButton.innerHTML = '&#10006;';
+    deleteButton.addEventListener('click', handleDeleteClick);
+    return deleteButton;
+  }
 
   function createToDoList(toDos, elementMaker) {
     return toDos.map(function(toDo) {
@@ -76,28 +97,38 @@ window.onload = function() {
   }
 
   function reRender() {
-    addToDo(input.value);
-    input.value = '';
     rootElement.innerHTML = '';
     render();
   }
 
-  function toggleDone(event) {
+  function handleCheckboxClick(event) {
     state.forEach(function(toDo) {
       if(event.target.id === toDo.id){
         toDo.done = !toDo.done;
       }
     });
-    rootElement.innerHTML = '';
-    render();
+    reRender();
   }
 
-
-  toDoForm.addEventListener('submit', function() {
-    // stop the form from reloading the page
+  function handleSubmit(event) {
     event.preventDefault();
+    input.value && addToDo(input.value);
+    input.value = '';
     reRender();
-  })
+  }
+
+  function handleDeleteClick(event) {
+    const eventId = event.target.id.split('-')[1];
+    state.forEach(function(toDo, i) {
+      if(eventId === toDo.id){
+        console.log('found');
+        state.splice(i, 1);
+      }
+    });
+    reRender();
+  }
+
+  toDoForm.addEventListener('submit', handleSubmit);
 
   render();
 };

@@ -39,7 +39,7 @@ window.onload = function() {
     const div = document.createElement('div');
     const checkBox = createCheckbox(done, id, handleCheckboxClick);
     const label = createLabel(content, done, id);
-    const deleteButton = createDeleteButton(id);
+    const deleteButton = createDeleteButton(id, handleDeleteClick);
 
     div.appendChild(checkBox);
     div.appendChild(label);
@@ -57,8 +57,7 @@ window.onload = function() {
   }
 
   function createLabel(content, done, id) {
-    const wrapperText = done ? 'del' : 'span';
-    const labelWrapper = document.createElement(wrapperText);
+    const labelWrapper = document.createElement(done ? 'del' : 'span');
     const label = document.createElement('label');
     label.setAttribute('for', id);
     const labelText = document.createTextNode(content);
@@ -67,11 +66,11 @@ window.onload = function() {
     return labelWrapper;
   }
 
-  function createDeleteButton(id) {
+  function createDeleteButton(id, listener) {
     const deleteButton = document.createElement('button');
     deleteButton.setAttribute('id', 'delete-' + id);
     deleteButton.innerHTML = '&#10005;';
-    deleteButton.addEventListener('click', handleDeleteClick);
+    deleteButton.addEventListener('click', listener);
     return deleteButton;
   }
 

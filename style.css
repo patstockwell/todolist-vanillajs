@@ -12,10 +12,6 @@ h1 {
   display: none;
 }
 
-#input:focus{
-    outline: none;
-}
-
 #input::placeholder {
   color: #ddd;
 }
@@ -42,6 +38,7 @@ input[type=checkbox] {
 }
 
 button {
+  background-color: transparent;
   border: none;
   margin-left: 10px;
   cursor: pointer;

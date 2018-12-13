@@ -1,5 +1,5 @@
 var toDoApp = (function() {
-  const state = [
+  var state = [
     {
       done: true,
       content: 'Book the car in for a service with the mechanic',
@@ -27,19 +27,19 @@ var toDoApp = (function() {
     },
   ];
 
-  const rootElement = document.getElementById('root');
-  const toDoForm = document.getElementById('form');
-  const input = document.getElementById('input');
+  var rootElement = document.getElementById('root');
+  var toDoForm = document.getElementById('form');
+  var input = document.getElementById('input');
 
   function createId(content) {
     return content.split(' ').join('');
   }
 
   function createToDoElement(content, done, id) {
-    const div = document.createElement('div');
-    const checkBox = createCheckbox(done, id, handleCheckboxClick);
-    const label = createLabel(content, done, id);
-    const deleteButton = createDeleteButton(id, handleDeleteClick);
+    var div = document.createElement('div');
+    var checkBox = createCheckbox(done, id, handleCheckboxClick);
+    var label = createLabel(content, done, id);
+    var deleteButton = createDeleteButton(id, handleDeleteClick);
 
     div.appendChild(checkBox);
     div.appendChild(label);
@@ -48,7 +48,7 @@ var toDoApp = (function() {
   };
 
   function createCheckbox(done, id, listener) {
-    const input = document.createElement('input');
+    var input = document.createElement('input');
     input.setAttribute('type', 'checkbox');
     input.setAttribute('id', id);
     input.checked = done;
@@ -57,17 +57,17 @@ var toDoApp = (function() {
   }
 
   function createLabel(content, done, id) {
-    const labelWrapper = document.createElement(done ? 'del' : 'span');
-    const label = document.createElement('label');
+    var labelWrapper = document.createElement(done ? 'del' : 'span');
+    var label = document.createElement('label');
     label.setAttribute('for', id);
-    const labelText = document.createTextNode(content);
+    var labelText = document.createTextNode(content);
     label.appendChild(labelText);
     labelWrapper.appendChild(label);
     return labelWrapper;
   }
 
   function createDeleteButton(id, listener) {
-    const deleteButton = document.createElement('button');
+    var deleteButton = document.createElement('button');
     deleteButton.setAttribute('id', 'delete-' + id);
     deleteButton.onclick = listener;
     deleteButton.innerHTML = '&#10005;';
@@ -81,18 +81,18 @@ var toDoApp = (function() {
     });
   };
 
-  function render() {
-    const toDoListElements = createToDoList(state, createToDoElement);
-    toDoListElements.forEach(function(element) {
-      rootElement.appendChild(element);
-    });
+  function addToDo(state, content) {
+    return state.concat([{
+      done: false,
+      content: content,
+      id: createId(content),
+    }]);
   }
 
-  function addToDo(content) {
-    state.push({
-      content: content,
-      done: false,
-      id: createId(content),
+  function render() {
+    var toDoListElements = createToDoList(state, createToDoElement);
+    toDoListElements.forEach(function(element) {
+      rootElement.appendChild(element);
     });
   }
 
@@ -112,13 +112,15 @@ var toDoApp = (function() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    input.value && addToDo(input.value);
-    input.value = '';
-    reRender();
+    if(input.value) {
+      state = addToDo(state, input.value);
+      input.value = '';
+      reRender();
+    }
   }
 
   function handleDeleteClick(event) {
-    const eventId = event.target.id.split('-')[1];
+    var eventId = event.target.id.split('-')[1];
     state.forEach(function(toDo, i) {
       if(eventId === toDo.id){
         console.log('found');
@@ -138,6 +140,7 @@ var toDoApp = (function() {
     createCheckbox: createCheckbox,
     createToDoElement, createToDoElement,
     createId: createId,
+    addToDo: addToDo,
   }
 
 })()

@@ -144,8 +144,9 @@ var toDoApp = (function() {
 
   toDoForm.addEventListener('submit', handleSubmit);
 
+  render();
+
   return {
-    render: render,
     createToDoList: createToDoList,
     createDeleteButton: createDeleteButton,
     createLabel: createLabel,
@@ -159,4 +160,3 @@ var toDoApp = (function() {
 
 })()
 
-toDoApp.render();

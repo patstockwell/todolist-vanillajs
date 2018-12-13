@@ -85,3 +85,10 @@
   expect(newState.length).toEqual(4);
   expect(newState[3].content).toEqual('luke skywalker');
 })();
+
+(function() {
+  console.log('toggleToDo() should return the correct state object');
+  var oldState = [{ done: false, id: 'special-id' }];
+  var newState = toDoApp.toggleToDo(oldState, 'special-id');
+  expect(newState[0].done).toEqual(true);
+})();

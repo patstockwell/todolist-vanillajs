@@ -98,6 +98,15 @@ var toDoApp = (function() {
     return state;
   }
 
+  function toggleToDo(state, eventId) {
+    for(var i = 0; i < state.length; i++) {
+      if(eventId === state[i].id) {
+        state[i].done = !state[i].done
+      }
+    }
+    return state;
+  }
+
   function render() {
     var toDoListElements = createToDoList(state, createToDoElement);
     toDoListElements.forEach(function(element) {
@@ -113,13 +122,15 @@ var toDoApp = (function() {
     render();
   }
 
+  function handleDeleteClick(event) {
+    var eventId = event.target.id.split('-')[1];
+    var newState = removeToDo(state, eventId);
+    reRender(newState);
+  }
+
   function handleCheckboxClick(event) {
-    state.forEach(function(toDo) {
-      if(event.target.id === toDo.id){
-        toDo.done = !toDo.done;
-      }
-    });
-    reRender();
+    var newState = toggleToDo(state, event.target.id);
+    reRender(newState);
   }
 
   function handleSubmit(event) {
@@ -129,12 +140,6 @@ var toDoApp = (function() {
       input.value = '';
       reRender(newState);
     }
-  }
-
-  function handleDeleteClick(event) {
-    var eventId = event.target.id.split('-')[1];
-    var newState = removeToDo(state, eventId);
-    reRender(newState);
   }
 
   toDoForm.addEventListener('submit', handleSubmit);
@@ -149,6 +154,7 @@ var toDoApp = (function() {
     createId: createId,
     addToDo: addToDo,
     removeToDo: removeToDo,
+    toggleToDo: toggleToDo,
   }
 
 })()

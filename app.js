@@ -89,6 +89,15 @@ var toDoApp = (function() {
     }]);
   }
 
+  function removeToDo(state, eventId) {
+    for (var i = 0; i < state.length; i++) {
+      if(eventId === state[i].id){
+        return state.slice(0, i).concat(state.slice(i + 1));
+      }
+    }
+    return state;
+  }
+
   function render() {
     var toDoListElements = createToDoList(state, createToDoElement);
     toDoListElements.forEach(function(element) {
@@ -96,7 +105,10 @@ var toDoApp = (function() {
     });
   }
 
-  function reRender() {
+  function reRender(newState) {
+    if(newState) {
+      state = newState;
+    }
     rootElement.innerHTML = '';
     render();
   }
@@ -113,21 +125,16 @@ var toDoApp = (function() {
   function handleSubmit(event) {
     event.preventDefault();
     if(input.value) {
-      state = addToDo(state, input.value);
+      var newState = addToDo(state, input.value);
       input.value = '';
-      reRender();
+      reRender(newState);
     }
   }
 
   function handleDeleteClick(event) {
     var eventId = event.target.id.split('-')[1];
-    state.forEach(function(toDo, i) {
-      if(eventId === toDo.id){
-        console.log('found');
-        state.splice(i, 1);
-      }
-    });
-    reRender();
+    var newState = removeToDo(state, eventId);
+    reRender(newState);
   }
 
   toDoForm.addEventListener('submit', handleSubmit);
@@ -141,6 +148,7 @@ var toDoApp = (function() {
     createToDoElement, createToDoElement,
     createId: createId,
     addToDo: addToDo,
+    removeToDo: removeToDo,
   }
 
 })()

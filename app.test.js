@@ -71,3 +71,17 @@
   expect(newState[3].id).toEqual('wonderwoman');
   expect(newState[3].done).toEqual(false);
 })();
+
+(function() {
+  console.log('removeToDo() should return the correct state object');
+  var oldState = [
+    { content: 'peter pan' },
+    { content: 'alice' },
+    { content: 'lee lin chin' },
+    { content: 'harry potter', id: 'harry-potter-id' },
+    { content: 'luke skywalker' },
+  ];
+  var newState = toDoApp.removeToDo(oldState, 'harry-potter-id');
+  expect(newState.length).toEqual(4);
+  expect(newState[3].content).toEqual('luke skywalker');
+})();

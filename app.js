@@ -1,4 +1,4 @@
-var toDoApp = (function() {
+(function() {
   var state = [
     {
       done: true,
@@ -144,9 +144,7 @@ var toDoApp = (function() {
 
   toDoForm.addEventListener('submit', handleSubmit);
 
-  render();
-
-  return {
+  var toDoFunctions = {
     createToDoList: createToDoList,
     createDeleteButton: createDeleteButton,
     createLabel: createLabel,
@@ -158,5 +156,8 @@ var toDoApp = (function() {
     toggleToDo: toggleToDo,
   }
 
+  toDoTests(toDoFunctions, expect);
+
+  render();
 })()
 

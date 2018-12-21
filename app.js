@@ -152,7 +152,7 @@
   }, expct);
 
   // render the initial state []
-  store.subscribe(render);
+  store.connect(render);
 
 })(expect, redax)
 

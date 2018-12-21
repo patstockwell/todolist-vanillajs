@@ -7,14 +7,13 @@ var redax = (function() {
     return state;
   }
 
-  function subscribe(func) {
+  function connect(func) {
     func(state);
     listeners.push(func);
   }
 
   function dispatch(action) {
     state = reducer(Object.assign({}, state), action);
-    console.log(state);
     listeners.forEach(function(listener) {
       listener(state);
     });
@@ -26,7 +25,7 @@ var redax = (function() {
     return {
       getState: getState,
       dispatch: dispatch,
-      subscribe: subscribe,
+      connect: connect,
     }
   }
 

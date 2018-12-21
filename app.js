@@ -107,7 +107,7 @@
     return state;
   }
 
-  function render() {
+  function render(state) {
     var toDoListElements = createToDoList(state, createToDoElement);
     toDoListElements.forEach(function(element) {
       rootElement.appendChild(element);
@@ -119,7 +119,7 @@
       state = newState;
     }
     rootElement.innerHTML = '';
-    render();
+    render(newState);
   }
 
   function handleDeleteClick(event) {
@@ -158,6 +158,6 @@
 
   toDoTests(toDoFunctions, expect);
 
-  render();
+  render(state);
 })()
 

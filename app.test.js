@@ -93,4 +93,57 @@ var toDoTests = function(toDoApp, expct) {
     expct(newState[0].done).toEqual(true);
     console.log('✔', 'toggleToDo() should return the correct state object');
   })();
+
+  (function() {
+    var oldState = {
+      todos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript890' },
+      ],
+    };
+    var newState = toDoApp.reducer(oldState, { type: 'ADD_TODO', content: 'pass this test' });
+    expct(newState).toEqual({
+      todos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript890'},
+        { done: false, content: 'pass this test', id: 'passthistest'},
+      ],
+    });
+    console.log('✔', 'reducer() ADD_TODO should return the correct state object');
+  })();
+
+  (function() {
+    var oldState = {
+      todos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript890' },
+      ],
+    };
+    var newState = toDoApp.reducer(oldState, { type: 'TOGGLE_TODO', id: 'learnjavascript890' });
+    expct(newState).toEqual({
+      todos: [
+        { done: true, content: 'learn javascript', id: 'learnjavascript890'},
+      ],
+    });
+    console.log('✔', 'reducer() TOGGLE_TODO should return the correct state object');
+  })();
+
+  (function() {
+    var oldState = {
+      todos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript890' },
+        { done: false, content: 'clean the kitchen', id: 'cleanthekitchen' },
+      ],
+    };
+    var newState = toDoApp.reducer(oldState, { type: 'REMOVE_TODO', id: 'cleanthekitchen' });
+    expct(newState).toEqual({
+      todos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript890'},
+      ],
+    });
+    console.log('✔', 'reducer() REMOVE_TODO should return the correct state object');
+  })();
+
+  (function() {
+    var newState = toDoApp.reducer();
+    expct(newState).toEqual({ todos: [] });
+    console.log('✔', 'reducer() should return the correct state object when no state is given');
+  })();
 }

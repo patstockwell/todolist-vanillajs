@@ -1,31 +1,60 @@
-(function() {
-  var state = [
-    {
-      done: true,
-      content: 'Book the car in for a service with the mechanic',
-      id: 'bookthecar',
-    },
-    {
+(function(expct, redax) {
+
+  // state management
+  function reducer(state, action) {
+    if (state === undefined) {
+      return { todos: [] };
+    }
+
+    var toDosCopy = state.todos.slice();
+
+    switch (action.type) {
+      case 'ADD_TODO':
+        return Object.assign({}, state, {
+          todos: addToDo(toDosCopy, action.content),
+        });
+      case 'TOGGLE_TODO':
+        return Object.assign({}, state, {
+          todos: toggleToDo(toDosCopy, action.id),
+        });
+      case 'REMOVE_TODO':
+        return Object.assign({}, state, {
+          todos: removeToDo(toDosCopy, action.id),
+        });
+      default:
+        return state;
+    }
+  }
+
+  function addToDo(toDos, content) {
+    return toDos.concat([{
       done: false,
-      content: 'Put the xmas tree up',
-      id: 'putthexmas',
-    },
-    {
-      done: true,
-      content: 'Go to the gym',
-      id: 'gotothegym',
-    },
-    {
-      done: false,
-      content: 'Call mum',
-      id: 'callmum',
-    },
-    {
-      done: false,
-      content: 'Do the dishes',
-      id: 'dothedishes',
-    },
-  ];
+      content: content,
+      id: createId(content),
+    }]);
+  }
+
+  function removeToDo(state, eventId) {
+    for (var i = 0; i < state.length; i++) {
+      if(eventId === state[i].id){
+        return state.slice(0, i).concat(state.slice(i + 1));
+      }
+    }
+    return state;
+  }
+
+  function toggleToDo(state, eventId) {
+    for(var i = 0; i < state.length; i++) {
+      if(eventId === state[i].id) {
+        state[i].done = !state[i].done
+      }
+    }
+    return state;
+  }
+
+  var store = redax.createStore(reducer);
+
+  // DOM management
 
   var rootElement = document.getElementById('root');
   var toDoForm = document.getElementById('form');
@@ -81,70 +110,35 @@
     });
   };
 
-  function addToDo(state, content) {
-    return state.concat([{
-      done: false,
-      content: content,
-      id: createId(content),
-    }]);
-  }
-
-  function removeToDo(state, eventId) {
-    for (var i = 0; i < state.length; i++) {
-      if(eventId === state[i].id){
-        return state.slice(0, i).concat(state.slice(i + 1));
-      }
-    }
-    return state;
-  }
-
-  function toggleToDo(state, eventId) {
-    for(var i = 0; i < state.length; i++) {
-      if(eventId === state[i].id) {
-        state[i].done = !state[i].done
-      }
-    }
-    return state;
-  }
-
   function render(state) {
-    var toDoListElements = createToDoList(state, createToDoElement);
+    rootElement.innerHTML = '';
+    var toDoListElements = createToDoList(state.todos, createToDoElement);
     toDoListElements.forEach(function(element) {
       rootElement.appendChild(element);
     });
   }
 
-  function reRender(newState) {
-    if(newState) {
-      state = newState;
-    }
-    rootElement.innerHTML = '';
-    render(newState);
-  }
-
   function handleDeleteClick(event) {
     var eventId = event.target.id.split('-')[1];
-    var newState = removeToDo(state, eventId);
-    reRender(newState);
+    store.dispatch({ type: 'REMOVE_TODO', id: eventId });
   }
 
   function handleCheckboxClick(event) {
-    var newState = toggleToDo(state, event.target.id);
-    reRender(newState);
+    store.dispatch({ type: 'TOGGLE_TODO', id: event.target.id });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
     if(input.value) {
-      var newState = addToDo(state, input.value);
+      store.dispatch({ type: 'ADD_TODO', content: input.value });
       input.value = '';
-      reRender(newState);
     }
   }
 
   toDoForm.addEventListener('submit', handleSubmit);
 
-  var toDoFunctions = {
+  // run the tests
+  toDoTests({
     createToDoList: createToDoList,
     createDeleteButton: createDeleteButton,
     createLabel: createLabel,
@@ -154,10 +148,11 @@
     addToDo: addToDo,
     removeToDo: removeToDo,
     toggleToDo: toggleToDo,
-  }
+    reducer: reducer,
+  }, expct);
 
-  toDoTests(toDoFunctions, expect);
+  // render the initial state []
+  store.subscribe(render);
 
-  render(state);
-})()
+})(expect, redax)
 

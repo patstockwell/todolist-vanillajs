@@ -195,4 +195,16 @@ var toDoTests = function(toDoApp, expct) {
     ]);
     console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
   })();
+
+  (function() {
+    var allToDos = [
+      { done: false, content: 'learn javascript', id: 'learnjavascript'},
+      { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+    ];
+    var clearedToDos = toDoApp.removeAllDoneToDos(allToDos);
+    expct(clearedToDos).toEqual([
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+    ]);
+    console.log('✔', 'removeAllDoneToDos() should remove all completed toDos from the array');
+  })();
 }

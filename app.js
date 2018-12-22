@@ -3,7 +3,7 @@
   // state management
   function reducer(state, action) {
     if (state === undefined) {
-      return { 
+      return {
         filter: 'NONE',
         toDos: [],
       };
@@ -28,6 +28,10 @@
         return Object.assign({}, state, {
           filter: action.filter,
         });
+      case 'REMOVE_ALL_DONE_TODOS':
+        return Object.assign({}, state, {
+          toDos: removeAllDoneToDos(toDosCopy),
+        });
       default:
         return state;
     }
@@ -41,22 +45,32 @@
     }]);
   }
 
-  function removeToDo(state, eventId) {
-    for (var i = 0; i < state.length; i++) {
-      if(eventId === state[i].id){
-        return state.slice(0, i).concat(state.slice(i + 1));
+  function removeToDo(toDos, eventId) {
+    for (var i = 0; i < toDos.length; i++) {
+      if(eventId === toDos[i].id){
+        return toDos.slice(0, i).concat(toDos.slice(i + 1));
       }
     }
-    return state;
+    return toDos;
   }
 
-  function toggleToDo(state, eventId) {
-    for(var i = 0; i < state.length; i++) {
-      if(eventId === state[i].id) {
-        state[i].done = !state[i].done
+  function toggleToDo(toDos, eventId) {
+    for(var i = 0; i < toDos.length; i++) {
+      if(eventId === toDos[i].id) {
+        toDos[i].done = !toDos[i].done
       }
     }
-    return state;
+    return toDos;
+  }
+
+  function removeAllDoneToDos(toDos) {
+    return toDos.reduce(function(accumulator, currentValue) {
+      if (currentValue.done) {
+        return accumulator;
+      } else {
+        return accumulator.concat([currentValue])
+      }
+    }, []);
   }
 
   function filterToDos(state) {
@@ -91,6 +105,7 @@
   var buttonAll = document.getElementById('button-all');
   var buttonActive = document.getElementById('button-active');
   var buttonCompleted = document.getElementById('button-completed');
+  var buttonRemoveAllDone = document.getElementById('button-remove-all-done');
 
   function createId(content) {
     return content.split(' ').join('');
@@ -179,10 +194,15 @@
     }
   }
 
+  function handleRemoveAllDone(event) {
+    store.dispatch({ type: 'REMOVE_ALL_DONE_TODOS' });
+  }
+
   toDoForm.addEventListener('submit', handleSubmit);
   buttonAll.addEventListener('click', handleFilterButtonClick);
   buttonActive.addEventListener('click', handleFilterButtonClick);
   buttonCompleted.addEventListener('click', handleFilterButtonClick);
+  buttonRemoveAllDone.addEventListener('click', handleRemoveAllDone);
 
   // run the tests
   toDoTests({
@@ -197,6 +217,7 @@
     toggleToDo: toggleToDo,
     reducer: reducer,
     filterToDos: filterToDos,
+    removeAllDoneToDos: removeAllDoneToDos,
   }, expct);
 
   // render the initial state []

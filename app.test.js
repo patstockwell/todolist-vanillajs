@@ -96,13 +96,13 @@ var toDoTests = function(toDoApp, expct) {
 
   (function() {
     var oldState = {
-      todos: [
+      toDos: [
         { done: false, content: 'learn javascript', id: 'learnjavascript890' },
       ],
     };
     var newState = toDoApp.reducer(oldState, { type: 'ADD_TODO', content: 'pass this test' });
     expct(newState).toEqual({
-      todos: [
+      toDos: [
         { done: false, content: 'learn javascript', id: 'learnjavascript890'},
         { done: false, content: 'pass this test', id: 'passthistest'},
       ],
@@ -112,13 +112,13 @@ var toDoTests = function(toDoApp, expct) {
 
   (function() {
     var oldState = {
-      todos: [
+      toDos: [
         { done: false, content: 'learn javascript', id: 'learnjavascript890' },
       ],
     };
     var newState = toDoApp.reducer(oldState, { type: 'TOGGLE_TODO', id: 'learnjavascript890' });
     expct(newState).toEqual({
-      todos: [
+      toDos: [
         { done: true, content: 'learn javascript', id: 'learnjavascript890'},
       ],
     });
@@ -127,14 +127,14 @@ var toDoTests = function(toDoApp, expct) {
 
   (function() {
     var oldState = {
-      todos: [
+      toDos: [
         { done: false, content: 'learn javascript', id: 'learnjavascript890' },
         { done: false, content: 'clean the kitchen', id: 'cleanthekitchen' },
       ],
     };
     var newState = toDoApp.reducer(oldState, { type: 'REMOVE_TODO', id: 'cleanthekitchen' });
     expct(newState).toEqual({
-      todos: [
+      toDos: [
         { done: false, content: 'learn javascript', id: 'learnjavascript890'},
       ],
     });
@@ -143,7 +143,56 @@ var toDoTests = function(toDoApp, expct) {
 
   (function() {
     var newState = toDoApp.reducer();
-    expct(newState).toEqual({ todos: [] });
+    expct(newState).toEqual({ 
+      filter: 'NONE',
+      toDos: [],
+    });
     console.log('✔', 'reducer() should return the correct state object when no state is given');
+  })();
+
+  (function() {
+    var oldState = {
+      filter: 'NONE',
+      toDos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+      ],
+    };
+    var filteredToDos = toDoApp.filterToDos(oldState);
+    expct(filteredToDos).toEqual([
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+    ]);
+    console.log('✔', 'filterToDos() NONE should return an unfiltered array of toDos');
+  })();
+
+  (function() {
+    var oldState = {
+      filter: 'DONE',
+      toDos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+      ],
+    };
+    var filteredToDos = toDoApp.filterToDos(oldState);
+    expct(filteredToDos).toEqual([
+        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+    ]);
+    console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
+  })();
+
+  (function() {
+    var oldState = {
+      filter: 'NOT_DONE',
+      toDos: [
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+      ],
+    };
+    var filteredToDos = toDoApp.filterToDos(oldState);
+    expct(filteredToDos).toEqual([
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+    ]);
+    console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
   })();
 }

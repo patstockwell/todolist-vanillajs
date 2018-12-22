@@ -3,23 +3,30 @@
   // state management
   function reducer(state, action) {
     if (state === undefined) {
-      return { todos: [] };
+      return { 
+        filter: 'NONE',
+        toDos: [],
+      };
     }
 
-    var toDosCopy = state.todos.slice();
+    var toDosCopy = state.toDos.slice();
 
     switch (action.type) {
       case 'ADD_TODO':
         return Object.assign({}, state, {
-          todos: addToDo(toDosCopy, action.content),
+          toDos: addToDo(toDosCopy, action.content),
         });
       case 'TOGGLE_TODO':
         return Object.assign({}, state, {
-          todos: toggleToDo(toDosCopy, action.id),
+          toDos: toggleToDo(toDosCopy, action.id),
         });
       case 'REMOVE_TODO':
         return Object.assign({}, state, {
-          todos: removeToDo(toDosCopy, action.id),
+          toDos: removeToDo(toDosCopy, action.id),
+        });
+      case 'CHANGE_FILTER':
+        return Object.assign({}, state, {
+          filter: action.filter,
         });
       default:
         return state;
@@ -52,6 +59,28 @@
     return state;
   }
 
+  function filterToDos(state) {
+    var filteredToDos = state.toDos.map(function(toDo) {
+      if (state.filter === 'NONE') {
+        return toDo;
+      } else if (state.filter === 'DONE' && toDo.done) {
+        return toDo;
+      } else if (state.filter === 'NOT_DONE' && !toDo.done) {
+        return toDo;
+      } else {
+        return null;
+      }
+    }).reduce(function(accumulator, currentValue) {
+      if (currentValue === null) {
+        return accumulator;
+      } else {
+        return accumulator.concat([currentValue])
+      }
+    }, []);
+
+    return filteredToDos;
+  }
+
   var store = redax.createStore(reducer);
 
   // DOM management
@@ -59,6 +88,9 @@
   var rootElement = document.getElementById('root');
   var toDoForm = document.getElementById('form');
   var input = document.getElementById('input');
+  var buttonAll = document.getElementById('button-all');
+  var buttonActive = document.getElementById('button-active');
+  var buttonCompleted = document.getElementById('button-completed');
 
   function createId(content) {
     return content.split(' ').join('');
@@ -111,8 +143,9 @@
   };
 
   function render(state) {
+    var filteredToDos = filterToDos(state);
     rootElement.innerHTML = '';
-    var toDoListElements = createToDoList(state.todos, createToDoElement);
+    var toDoListElements = createToDoList(filteredToDos, createToDoElement);
     toDoListElements.forEach(function(element) {
       rootElement.appendChild(element);
     });
@@ -135,7 +168,21 @@
     }
   }
 
+  function handleFilterButtonClick(event) {
+    var id = event.target.id;
+    if (id === 'button-all') {
+      store.dispatch({ type: 'CHANGE_FILTER', filter: 'NONE' });
+    } else if (id === 'button-active') {
+      store.dispatch({ type: 'CHANGE_FILTER', filter: 'NOT_DONE' });
+    } else {
+      store.dispatch({ type: 'CHANGE_FILTER', filter: 'DONE' });
+    }
+  }
+
   toDoForm.addEventListener('submit', handleSubmit);
+  buttonAll.addEventListener('click', handleFilterButtonClick);
+  buttonActive.addEventListener('click', handleFilterButtonClick);
+  buttonCompleted.addEventListener('click', handleFilterButtonClick);
 
   // run the tests
   toDoTests({
@@ -149,6 +196,7 @@
     removeToDo: removeToDo,
     toggleToDo: toggleToDo,
     reducer: reducer,
+    filterToDos: filterToDos,
   }, expct);
 
   // render the initial state []

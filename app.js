@@ -205,7 +205,7 @@
   buttonRemoveAllDone.addEventListener('click', handleRemoveAllDone);
 
   // run the tests
-  toDoTests({
+  false && toDoTests({
     createToDoList: createToDoList,
     createDeleteButton: createDeleteButton,
     createLabel: createLabel,
@@ -223,5 +223,5 @@
   // render the initial state []
   store.connect(render);
 
-})(expect, redax)
+})((false && expect), redax)
 

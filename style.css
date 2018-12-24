@@ -22,6 +22,7 @@ h1 {
   margin: 20px 0;
   width: 100%;
   padding: 10px;
+  box-sizing: border-box;
 }
 
 del {
@@ -43,3 +44,16 @@ button {
   margin-left: 10px;
   cursor: pointer;
 }
+
+#panel-beneath-todos {
+  margin-top: 20px;
+}
+
+#button-remove-all-done {
+  float: right;
+  margin: 0;
+}
+
+.filter-buttons {
+  padding: 0;
+  margin: 0 10px 0 0;

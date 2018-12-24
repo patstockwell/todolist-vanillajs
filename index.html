@@ -2,10 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-      <title>To Do List</title>
-      <link href="./style.css" rel="stylesheet" type="text/css">
-      <link rel="shortcut icon" href="./favicon.ico" type="image/icon">
-      <link rel="icon" href="./favicon.ico" type="image/icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To Do List</title>
+    <link href="./style.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/icon">
+    <link rel="icon" href="./favicon.ico" type="image/icon">
   </head>
   <body>
     <div class="box">
@@ -25,15 +26,15 @@
         </div>
         -->
       </div>
-      <div>
-        <button id="button-all">All</button>
-        <button id="button-active">Active</button>
-        <button id="button-completed">Completed</button>
-        <button id="button-remove-all-done">Clear Completed</button>
+      <div id="panel-beneath-todos">
+        <button class="filter-buttons" id="button-all">All</button>
+        <button class="filter-buttons" id="button-active">Active</button>
+        <button class="filter-buttons" id="button-completed">Completed</button>
+        <button class="filter-buttons" id="button-remove-all-done">Clear Completed</button>
       </div>
       <script src="./app.test.js"></script>
       <script src="./redax.js"></script>
-      <script src="https://unpkg.com/expect@%3C21/umd/expect.min.js"></script>
+      <!-- <script src="https://unpkg.com/expect@%3C21/umd/expect.min.js"></script> -->
       <script src="./app.js"></script>
     </div>
   </body>

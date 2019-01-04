@@ -1,61 +1,53 @@
-var toDoTests = function(toDoApp, expct) {
-  (function() {
-    var mockToDos = [{}, {}, {}, {}];
-    var elementMaker = () => ('<div></div>');
-    var toDoList = toDoApp.createToDoList(mockToDos, elementMaker);
-    expct(toDoList.length).toEqual(4);
-    console.log('✔', 'createToDoList() should return an array');
-  })();
-
+if (typeof toDoApp === 'object' && typeof expect === 'function') {
   (function() {
     var deleteButton = toDoApp.createDeleteButton('myId', () => {});
-    expct(deleteButton.tagName).toEqual('BUTTON');
-    expct(deleteButton.id).toEqual('delete-myId');
+    expect(deleteButton.tagName).toEqual('BUTTON');
+    expect(deleteButton.id).toEqual('delete-myId');
     console.log('✔', 'createDeleteButton() should return a button element with the specified id')
   })();
 
   (function() {
     var idWordList = toDoApp.createId('this sentence has spaces').split(' ');
-    expct(idWordList.length).toEqual(1);
+    expect(idWordList.length).toEqual(1);
     console.log('✔', 'createId() should return a string without spaces');
   })();
 
   (function() {
     var checkbox = toDoApp.createCheckbox(false, 'checkbox-id', () => {});
-    expct(checkbox.tagName).toEqual('INPUT');
-    expct(checkbox.id).toEqual('checkbox-id');
+    expect(checkbox.tagName).toEqual('INPUT');
+    expect(checkbox.id).toEqual('checkbox-id');
     console.log('✔', 'createCheckbox() should return a checkbox element with the specified id');
   })();
 
   (function() {
     var labelWrapper = toDoApp.createLabel('this is a todo', false, 'label-id');
-    expct(labelWrapper.tagName).toEqual('SPAN');
+    expect(labelWrapper.tagName).toEqual('SPAN');
     console.log('✔', 'createLabel() should return a label element wrapped in a <span> for incomplete todos');
   })();
 
   (function() {
     var labelWrapper = toDoApp.createLabel('this is a todo', true, 'label-id');
-    expct(labelWrapper.tagName).toEqual('DEL');
+    expect(labelWrapper.tagName).toEqual('DEL');
     console.log('✔', 'createLabel() should return a label element wrapped in a <del> for complete todos');
   })();
 
   (function() {
     var label = toDoApp.createLabel('this is a todo', true, 'label-id').children[0];
-    expct(label.tagName).toEqual('LABEL');
+    expect(label.tagName).toEqual('LABEL');
     console.log('✔', 'createLabel() should return an element where the first child is a label');
-    expct(label.htmlFor).toEqual('label-id');
+    expect(label.htmlFor).toEqual('label-id');
     console.log('✔', 'createLabel() should return a label element with the correct `for` attribute');
   })();
 
   (function() {
     var toDoElement = toDoApp.createToDoElement('this is the content', false, 'thisIsTheId');
-    expct(toDoElement.tagName).toEqual('DIV');
+    expect(toDoElement.tagName).toEqual('DIV');
     console.log('✔', 'createToDoElement() should return a <div>');
-    expct(toDoElement.children[0].tagName).toEqual('INPUT');
+    expect(toDoElement.children[0].tagName).toEqual('INPUT');
     console.log('✔', 'the <div> should have a checkbox child element');
-    expct(toDoElement.children[1].tagName).toEqual('SPAN');
+    expect(toDoElement.children[1].tagName).toEqual('SPAN');
     console.log('✔', 'the <div> should have a label child element');
-    expct(toDoElement.children[2].tagName).toEqual('BUTTON');
+    expect(toDoElement.children[2].tagName).toEqual('BUTTON');
     console.log('✔', 'the <div> should have a button child element');
   })();
 
@@ -66,10 +58,10 @@ var toDoTests = function(toDoApp, expct) {
       { content: 'harry potter' },
     ];
     var newState = toDoApp.addToDo(oldState, 'wonder woman');
-    expct(newState.length).toEqual(4);
-    expct(newState[3].content).toEqual('wonder woman');
-    expct(newState[3].id).toEqual('wonderwoman');
-    expct(newState[3].done).toEqual(false);
+    expect(newState.length).toEqual(4);
+    expect(newState[3].content).toEqual('wonder woman');
+    expect(newState[3].id).toEqual('wonderwoman');
+    expect(newState[3].done).toEqual(false);
     console.log('✔', 'addToDo() should return the correct state object');
   })();
 
@@ -82,15 +74,15 @@ var toDoTests = function(toDoApp, expct) {
       { content: 'luke skywalker' },
     ];
     var newState = toDoApp.removeToDo(oldState, 'harry-potter-id');
-    expct(newState.length).toEqual(4);
-    expct(newState[3].content).toEqual('luke skywalker');
+    expect(newState.length).toEqual(4);
+    expect(newState[3].content).toEqual('luke skywalker');
     console.log('✔', 'removeToDo() should return the correct state object');
   })();
 
   (function() {
     var oldState = [{ done: false, id: 'special-id' }];
     var newState = toDoApp.toggleToDo(oldState, 'special-id');
-    expct(newState[0].done).toEqual(true);
+    expect(newState[0].done).toEqual(true);
     console.log('✔', 'toggleToDo() should return the correct state object');
   })();
 
@@ -101,7 +93,7 @@ var toDoTests = function(toDoApp, expct) {
       ],
     };
     var newState = toDoApp.reducer(oldState, { type: 'ADD_TODO', content: 'pass this test' });
-    expct(newState).toEqual({
+    expect(newState).toEqual({
       toDos: [
         { done: false, content: 'learn javascript', id: 'learnjavascript890'},
         { done: false, content: 'pass this test', id: 'passthistest'},
@@ -117,7 +109,7 @@ var toDoTests = function(toDoApp, expct) {
       ],
     };
     var newState = toDoApp.reducer(oldState, { type: 'TOGGLE_TODO', id: 'learnjavascript890' });
-    expct(newState).toEqual({
+    expect(newState).toEqual({
       toDos: [
         { done: true, content: 'learn javascript', id: 'learnjavascript890'},
       ],
@@ -133,7 +125,7 @@ var toDoTests = function(toDoApp, expct) {
       ],
     };
     var newState = toDoApp.reducer(oldState, { type: 'REMOVE_TODO', id: 'cleanthekitchen' });
-    expct(newState).toEqual({
+    expect(newState).toEqual({
       toDos: [
         { done: false, content: 'learn javascript', id: 'learnjavascript890'},
       ],
@@ -143,7 +135,7 @@ var toDoTests = function(toDoApp, expct) {
 
   (function() {
     var newState = toDoApp.reducer();
-    expct(newState).toEqual({ 
+    expect(newState).toEqual({
       filter: 'NONE',
       toDos: [],
     });
@@ -159,7 +151,7 @@ var toDoTests = function(toDoApp, expct) {
       ],
     };
     var filteredToDos = toDoApp.filterToDos(oldState);
-    expct(filteredToDos).toEqual([
+    expect(filteredToDos).toEqual([
         { done: false, content: 'learn javascript', id: 'learnjavascript'},
         { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
     ]);
@@ -175,7 +167,7 @@ var toDoTests = function(toDoApp, expct) {
       ],
     };
     var filteredToDos = toDoApp.filterToDos(oldState);
-    expct(filteredToDos).toEqual([
+    expect(filteredToDos).toEqual([
         { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
     ]);
     console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
@@ -190,7 +182,7 @@ var toDoTests = function(toDoApp, expct) {
       ],
     };
     var filteredToDos = toDoApp.filterToDos(oldState);
-    expct(filteredToDos).toEqual([
+    expect(filteredToDos).toEqual([
         { done: false, content: 'learn javascript', id: 'learnjavascript'},
     ]);
     console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
@@ -202,7 +194,7 @@ var toDoTests = function(toDoApp, expct) {
       { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
     ];
     var clearedToDos = toDoApp.removeAllDoneToDos(allToDos);
-    expct(clearedToDos).toEqual([
+    expect(clearedToDos).toEqual([
         { done: false, content: 'learn javascript', id: 'learnjavascript'},
     ]);
     console.log('✔', 'removeAllDoneToDos() should remove all completed toDos from the array');

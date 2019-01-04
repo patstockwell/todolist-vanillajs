@@ -1,4 +1,4 @@
-(function(expct, redax) {
+var toDoApp = (function(redax) {
 
   // state management
   function reducer(state, action) {
@@ -111,7 +111,7 @@
     return content.split(' ').join('');
   }
 
-  function createToDoElement(content, done, id) {
+  function createToDoElement({ content, done, id }) {
     var div = document.createElement('div');
     var checkBox = createCheckbox(done, id, handleCheckboxClick);
     var label = createLabel(content, done, id);
@@ -145,25 +145,20 @@
   function createDeleteButton(id, listener) {
     var deleteButton = document.createElement('button');
     deleteButton.setAttribute('id', 'delete-' + id);
-    deleteButton.onclick = listener;
     deleteButton.innerHTML = '&#10005;';
     deleteButton.addEventListener('click', listener);
     return deleteButton;
   }
 
-  function createToDoList(toDos, elementMaker) {
-    return toDos.map(function(toDo) {
-      return elementMaker(toDo.content, toDo.done, toDo.id);
-    });
-  };
-
   function render(state) {
-    var filteredToDos = filterToDos(state);
     rootElement.innerHTML = '';
-    var toDoListElements = createToDoList(filteredToDos, createToDoElement);
-    toDoListElements.forEach(function(element) {
-      rootElement.appendChild(element);
-    });
+    filterToDos(state)
+      .map(function(toDo) {
+        return createToDoElement(toDo);
+      })
+      .forEach(function(element) {
+        rootElement.appendChild(element);
+      });
   }
 
   function handleDeleteClick(event) {
@@ -204,9 +199,10 @@
   buttonCompleted.addEventListener('click', handleFilterButtonClick);
   buttonRemoveAllDone.addEventListener('click', handleRemoveAllDone);
 
-  // run the tests
-  false && toDoTests({
-    createToDoList: createToDoList,
+  // render the initial state []
+  store.connect(render);
+
+  return {
     createDeleteButton: createDeleteButton,
     createLabel: createLabel,
     createCheckbox: createCheckbox,
@@ -218,10 +214,7 @@
     reducer: reducer,
     filterToDos: filterToDos,
     removeAllDoneToDos: removeAllDoneToDos,
-  }, expct);
+  }
 
-  // render the initial state []
-  store.connect(render);
-
-})((false && expect), redax)
+})(redax)
 

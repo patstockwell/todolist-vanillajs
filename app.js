@@ -133,13 +133,10 @@ var toDoApp = (function(redax) {
   }
 
   function createLabel(content, done, id) {
-    var labelWrapper = document.createElement(done ? 'del' : 'span');
     var label = document.createElement('label');
     label.setAttribute('for', id);
-    var labelText = document.createTextNode(content);
-    label.appendChild(labelText);
-    labelWrapper.appendChild(label);
-    return labelWrapper;
+    label.innerHTML = (done ? content.strike() : content);
+    return label;
   }
 
   function createDeleteButton(id, listener) {

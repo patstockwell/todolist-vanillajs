@@ -20,19 +20,20 @@ if (typeof toDoApp === 'object' && typeof expect === 'function') {
   })();
 
   (function() {
-    var labelWrapper = toDoApp.createLabel('this is a todo', false, 'label-id');
-    expect(labelWrapper.tagName).toEqual('SPAN');
-    console.log('✔', 'createLabel() should return a label element wrapped in a <span> for incomplete todos');
+    var label = toDoApp.createLabel('this is a todo', true, 'label-id');
+    expect(label.firstChild.tagName).toEqual('STRIKE');
+    console.log('✔', 'createLabel() should return a label element with a <strike> tag for complete todos');
   })();
 
   (function() {
-    var labelWrapper = toDoApp.createLabel('this is a todo', true, 'label-id');
-    expect(labelWrapper.tagName).toEqual('DEL');
-    console.log('✔', 'createLabel() should return a label element wrapped in a <del> for complete todos');
+    var label = toDoApp.createLabel('this is a todo', false, 'label-id');
+    console.dir();
+    expect(label.firstChild.textContent).toEqual('this is a todo');
+    console.log('✔', 'createLabel() should return a label element with the correct text for incomplete todos');
   })();
 
   (function() {
-    var label = toDoApp.createLabel('this is a todo', true, 'label-id').children[0];
+    var label = toDoApp.createLabel('this is a todo', true, 'label-id');
     expect(label.tagName).toEqual('LABEL');
     console.log('✔', 'createLabel() should return an element where the first child is a label');
     expect(label.htmlFor).toEqual('label-id');
@@ -45,7 +46,7 @@ if (typeof toDoApp === 'object' && typeof expect === 'function') {
     console.log('✔', 'createToDoElement() should return a <div>');
     expect(toDoElement.children[0].tagName).toEqual('INPUT');
     console.log('✔', 'the <div> should have a checkbox child element');
-    expect(toDoElement.children[1].tagName).toEqual('SPAN');
+    expect(toDoElement.children[1].tagName).toEqual('LABEL');
     console.log('✔', 'the <div> should have a label child element');
     expect(toDoElement.children[2].tagName).toEqual('BUTTON');
     console.log('✔', 'the <div> should have a button child element');

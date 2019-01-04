@@ -199,8 +199,8 @@ var toDoApp = (function(redax) {
   buttonCompleted.addEventListener('click', handleFilterButtonClick);
   buttonRemoveAllDone.addEventListener('click', handleRemoveAllDone);
 
-  // render the initial state []
-  store.connect(render);
+  // register the render method with redax store
+  store.subscribe(render);
 
   return {
     createDeleteButton: createDeleteButton,

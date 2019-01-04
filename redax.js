@@ -7,8 +7,7 @@ var redax = (function() {
     return state;
   }
 
-  function connect(func) {
-    func(state);
+  function subscribe(func) {
     listeners.push(func);
   }
 
@@ -25,7 +24,7 @@ var redax = (function() {
     return {
       getState: getState,
       dispatch: dispatch,
-      connect: connect,
+      subscribe: subscribe,
     }
   }
 

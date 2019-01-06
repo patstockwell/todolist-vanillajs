@@ -13,6 +13,13 @@ var toDoApp = (function(redax) {
     var toDosCopy = state.toDos.slice();
 
     switch (action.type) {
+      case 'CHECK_LOCAL_STORAGE_FOR_TODOS':
+        return Object.assign({}, state, {
+          toDos: getLocalState(),
+        });
+      case 'SET_LOCAL_STORAGE':
+        setLocalStorage(state);
+        return state;
       case 'ADD_TODO':
         return Object.assign({}, state, {
           toDos: addToDo(toDosCopy, action.content),
@@ -36,6 +43,18 @@ var toDoApp = (function(redax) {
       default:
         return state;
     }
+  }
+
+  function getLocalState() {
+    var localState = localStorage.getItem('toDoItems')
+      ? JSON.parse(localStorage.getItem('toDoItems'))
+      : [];
+    return localState;
+  }
+
+  function setLocalStorage(state) {
+    console.log('setting state', state);
+    localStorage.setItem('toDoItems', JSON.stringify(state.toDos));
   }
 
   function addToDo(toDos, content) {
@@ -158,34 +177,45 @@ var toDoApp = (function(redax) {
       .forEach(function(element) {
         rootElement.appendChild(element);
       });
+    renderButtonHighlight(state.filter);
   }
+
+  function renderButtonHighlight(filter) {
+    for (var button of buttons) {
+      button.className = '';
+    }
+    if (filter === 'DONE') {
+      buttonCompleted.className = 'active';
+    } else if (filter === 'NOT_DONE') {
+      buttonActive.className = 'active';
+    } else {
+      buttonAll.className = 'active';
+    }
+  }
+
 
   function handleDeleteClick(event) {
     var eventId = event.target.id.split('-')[1];
     store.dispatch({ type: 'REMOVE_TODO', id: eventId });
+    store.dispatch({ type: 'SET_LOCAL_STORAGE' });
   }
 
   function handleCheckboxClick(event) {
     store.dispatch({ type: 'TOGGLE_TODO', id: event.target.id });
+    store.dispatch({ type: 'SET_LOCAL_STORAGE' });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
     if(input.value) {
       store.dispatch({ type: 'ADD_TODO', content: input.value });
+      store.dispatch({ type: 'SET_LOCAL_STORAGE' });
       input.value = '';
     }
   }
 
   function handleFilterButtonClick(event) {
     var id = event.target.id;
-
-    for (var button of buttons) {
-      button.className = '';
-      if (button.id === id) {
-        button.className = 'active';
-      }
-    }
 
     if (id === 'button-all') {
       store.dispatch({ type: 'CHANGE_FILTER', filter: 'NONE' });
@@ -198,6 +228,7 @@ var toDoApp = (function(redax) {
 
   function handleRemoveAllDone(event) {
     store.dispatch({ type: 'REMOVE_ALL_DONE_TODOS' });
+    store.dispatch({ type: 'SET_LOCAL_STORAGE' });
   }
 
   toDoForm.addEventListener('submit', handleSubmit);
@@ -208,6 +239,7 @@ var toDoApp = (function(redax) {
 
   // register the render method with redax store
   store.subscribe(render);
+  store.dispatch({ type: 'CHECK_LOCAL_STORAGE_FOR_TODOS' });
 
   if (RUN_UNIT_TESTS) {
     return {

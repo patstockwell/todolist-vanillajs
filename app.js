@@ -1,4 +1,5 @@
 var toDoApp = (function(redax) {
+  var RUN_UNIT_TESTS = false;
 
   // state management
   function reducer(state, action) {
@@ -199,18 +200,20 @@ var toDoApp = (function(redax) {
   // register the render method with redax store
   store.subscribe(render);
 
-  return {
-    createDeleteButton: createDeleteButton,
-    createLabel: createLabel,
-    createCheckbox: createCheckbox,
-    createToDoElement, createToDoElement,
-    createId: createId,
-    addToDo: addToDo,
-    removeToDo: removeToDo,
-    toggleToDo: toggleToDo,
-    reducer: reducer,
-    filterToDos: filterToDos,
-    removeAllDoneToDos: removeAllDoneToDos,
+  if (RUN_UNIT_TESTS) {
+    return {
+      createDeleteButton: createDeleteButton,
+      createLabel: createLabel,
+      createCheckbox: createCheckbox,
+      createToDoElement, createToDoElement,
+      createId: createId,
+      addToDo: addToDo,
+      removeToDo: removeToDo,
+      toggleToDo: toggleToDo,
+      reducer: reducer,
+      filterToDos: filterToDos,
+      removeAllDoneToDos: removeAllDoneToDos,
+    }
   }
 
 })(redax)

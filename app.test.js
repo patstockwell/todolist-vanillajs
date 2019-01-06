@@ -27,7 +27,6 @@ if (typeof toDoApp === 'object' && typeof expect === 'function') {
 
   (function() {
     var label = toDoApp.createLabel('this is a todo', false, 'label-id');
-    console.dir();
     expect(label.firstChild.textContent).toEqual('this is a todo');
     console.log('✔', 'createLabel() should return a label element with the correct text for incomplete todos');
   })();

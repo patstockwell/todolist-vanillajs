@@ -52,11 +52,10 @@ button {
 
 #panel-beneath-todos #button-remove-all-done {
   float: right;
-  margin: 0;
 }
 
 #panel-beneath-todos button {
-  margin: 0 10px 0 0;
+  margin: 10px;
 }
 
 .active {

@@ -107,6 +107,7 @@ var toDoApp = (function(redax) {
   var buttonActive = document.getElementById('button-active');
   var buttonCompleted = document.getElementById('button-completed');
   var buttonRemoveAllDone = document.getElementById('button-remove-all-done');
+  var buttons = [ buttonAll, buttonActive, buttonCompleted ];
 
   function createId(content) {
     return content.split(' ').join('');
@@ -178,6 +179,14 @@ var toDoApp = (function(redax) {
 
   function handleFilterButtonClick(event) {
     var id = event.target.id;
+
+    for (var button of buttons) {
+      button.className = '';
+      if (button.id === id) {
+        button.className = 'active';
+      }
+    }
+
     if (id === 'button-all') {
       store.dispatch({ type: 'CHANGE_FILTER', filter: 'NONE' });
     } else if (id === 'button-active') {

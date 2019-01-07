@@ -10,11 +10,19 @@
   </head>
   <body>
     <div class="box">
-      <h1>Vanilla JS to do list</h1>
+      <h1>To do list</h1>
+      <div>
+        <button id="button-remove-all-done">Clear Completed</button>
+      </div>
       <form id="form">
-        <input id="input" type="text" placeholder="What needs to be done?">
+        <input id="input" type="text" placeholder="What needs doing?">
         <input type="submit" id="submit">
       </form>
+      <div id="button-panel">
+        <button class="active" id="button-all">All</button>
+        <button id="button-active">Active</button>
+        <button id="button-completed">Completed</button>
+      </div>
       <div id="root">
         <!--
         <div>
@@ -25,12 +33,6 @@
           <button id="delete-1">&#10006;</button>
         </div>
         -->
-      </div>
-      <div id="panel-beneath-todos">
-        <button class="active" id="button-all">All</button>
-        <button id="button-active">Active</button>
-        <button id="button-completed">Completed</button>
-        <button id="button-remove-all-done">Clear Completed</button>
       </div>
       <script src="./redax.js"></script>
       <script src="./app.js"></script>

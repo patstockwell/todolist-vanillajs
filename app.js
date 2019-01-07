@@ -18,7 +18,7 @@ var toDoApp = (function(redax) {
           toDos: getLocalState(),
         });
       case 'SET_LOCAL_STORAGE':
-        setLocalStorage(state);
+        localStorage.setItem('toDoItems', JSON.stringify(state.toDos));
         return state;
       case 'ADD_TODO':
         return Object.assign({}, state, {
@@ -50,11 +50,6 @@ var toDoApp = (function(redax) {
       ? JSON.parse(localStorage.getItem('toDoItems'))
       : [];
     return localState;
-  }
-
-  function setLocalStorage(state) {
-    console.log('setting state', state);
-    localStorage.setItem('toDoItems', JSON.stringify(state.toDos));
   }
 
   function addToDo(toDos, content) {

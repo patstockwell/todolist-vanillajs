@@ -17,7 +17,7 @@ h1 {
 }
 
 #input {
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 100;
   margin: 20px 0;
   width: 100%;
@@ -46,15 +46,15 @@ button {
   cursor: pointer;
 }
 
-#panel-beneath-todos {
-  margin-top: 20px;
+#button-panel {
+  margin-bottom: 20px;
 }
 
-#panel-beneath-todos #button-remove-all-done {
+#button-remove-all-done {
   float: right;
 }
 
-#panel-beneath-todos button {
+#button-panel button {
   margin: 10px;
 }
 

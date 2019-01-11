@@ -1,3 +1,5 @@
 # To Do List App
 
-An app built for the purposes of learning and understanding javascript apps without frameworks. The _redax.js_ file is a simplified recreation of redux. The tests are written using [Michael Jackson's `expect` library](https://github.com/mjackson/expect) and are simply run in the browser console. The `expect` library is a UMD module available as a global variable at runtime. There are zero dependencies for this project.
+An app built for the purposes of learning and understanding javascript apps without frameworks. The _redax.js_ file is a simplified recreation of redux.
+
+The tests are written using a simple hand-rolled expect function and are run in the browser console. This is not the most efficient or comprehensive way to test, but it is intended to take away the convenience of a library and teach someone what a testing tool gives us. There are zero dependencies for this project.

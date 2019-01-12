@@ -1,13 +1,12 @@
 if (typeof toDoApp === 'object') {
-  (function() {
+  (function(toDoApp) {
     function expect(left) {
       return {
         toEqual: function(right) {
           if (JSON.stringify(left) !== JSON.stringify(right)) {
-            throw new Error(`Test failed.
-              Expected: ${JSON.stringify(right)}
-              Received: ${JSON.stringify(left)}
-              `
+            throw new Error('Test failed.\n'
+              + 'Expected: ' + JSON.stringify(right) + '\n'
+              + 'Received: ' + JSON.stringify(left) + '\n'
             );
           }
         },
@@ -15,10 +14,10 @@ if (typeof toDoApp === 'object') {
     }
 
     (function() {
-      var deleteButton = toDoApp.createDeleteButton('myId', () => {});
+      var deleteButton = toDoApp.createDeleteButton({ id: 'myId' }, function(){});
       expect(deleteButton.tagName).toEqual('BUTTON');
       expect(deleteButton.id).toEqual('delete-myId');
-      console.log('✔', 'createDeleteButton() should return a button element with the specified id')
+      console.log('✔', 'createDeleteButton() should return a button element with the specified id');
     })();
 
     (function() {
@@ -28,26 +27,38 @@ if (typeof toDoApp === 'object') {
     })();
 
     (function() {
-      var checkbox = toDoApp.createCheckbox(false, 'checkbox-id', () => {});
+      var checkbox = toDoApp.createCheckbox({ done: false, id: 'checkbox-id' }, function(){});
       expect(checkbox.tagName).toEqual('INPUT');
       expect(checkbox.id).toEqual('checkbox-id');
       console.log('✔', 'createCheckbox() should return a checkbox element with the specified id');
     })();
 
     (function() {
-      var label = toDoApp.createLabel('this is a todo', true, 'label-id');
+      var label = toDoApp.createLabel({
+        content: 'this is a todo',
+        done: true,
+        id: 'label-id',
+      });
       expect(label.firstChild.tagName).toEqual('STRIKE');
       console.log('✔', 'createLabel() should return a label element with a <strike> tag for complete todos');
     })();
 
     (function() {
-      var label = toDoApp.createLabel('this is a todo', false, 'label-id');
+      var label = toDoApp.createLabel({
+        content: 'this is a todo',
+        done: true,
+        id: 'label-id',
+      });
       expect(label.firstChild.textContent).toEqual('this is a todo');
       console.log('✔', 'createLabel() should return a label element with the correct text for incomplete todos');
     })();
 
     (function() {
-      var label = toDoApp.createLabel('this is a todo', true, 'label-id');
+      var label = toDoApp.createLabel({
+        content: 'this is a todo',
+        done: true,
+        id: 'label-id',
+      });
       expect(label.tagName).toEqual('LABEL');
       console.log('✔', 'createLabel() should return an element where the first child is a label');
       expect(label.htmlFor).toEqual('label-id');
@@ -167,8 +178,8 @@ if (typeof toDoApp === 'object') {
       };
       var filteredToDos = toDoApp.filterToDos(oldState);
       expect(filteredToDos).toEqual([
-          { done: false, content: 'learn javascript', id: 'learnjavascript'},
-          { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
       ]);
       console.log('✔', 'filterToDos() NONE should return an unfiltered array of toDos');
     })();
@@ -183,7 +194,7 @@ if (typeof toDoApp === 'object') {
       };
       var filteredToDos = toDoApp.filterToDos(oldState);
       expect(filteredToDos).toEqual([
-          { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
       ]);
       console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
     })();
@@ -198,7 +209,7 @@ if (typeof toDoApp === 'object') {
       };
       var filteredToDos = toDoApp.filterToDos(oldState);
       expect(filteredToDos).toEqual([
-          { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
       ]);
       console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
     })();
@@ -210,9 +221,9 @@ if (typeof toDoApp === 'object') {
       ];
       var clearedToDos = toDoApp.removeAllDoneToDos(allToDos);
       expect(clearedToDos).toEqual([
-          { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { done: false, content: 'learn javascript', id: 'learnjavascript'},
       ]);
       console.log('✔', 'removeAllDoneToDos() should remove all completed toDos from the array');
     })();
-  })();
+  })(toDoApp);
 }

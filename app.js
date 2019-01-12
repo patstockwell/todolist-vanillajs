@@ -1,3 +1,4 @@
+/* exported toDoApp */
 var toDoApp = (function(redax) {
   var RUN_UNIT_TESTS = false;
 
@@ -13,35 +14,35 @@ var toDoApp = (function(redax) {
     var toDosCopy = state.toDos.slice();
 
     switch (action.type) {
-      case 'CHECK_LOCAL_STORAGE_FOR_TODOS':
-        return Object.assign({}, state, {
-          toDos: getLocalState(),
-        });
-      case 'SET_LOCAL_STORAGE':
-        localStorage.setItem('toDoItems', JSON.stringify(state.toDos));
-        return state;
-      case 'ADD_TODO':
-        return Object.assign({}, state, {
-          toDos: addToDo(toDosCopy, action.content),
-        });
-      case 'TOGGLE_TODO':
-        return Object.assign({}, state, {
-          toDos: toggleToDo(toDosCopy, action.id),
-        });
-      case 'REMOVE_TODO':
-        return Object.assign({}, state, {
-          toDos: removeToDo(toDosCopy, action.id),
-        });
-      case 'CHANGE_FILTER':
-        return Object.assign({}, state, {
-          filter: action.filter,
-        });
-      case 'REMOVE_ALL_DONE_TODOS':
-        return Object.assign({}, state, {
-          toDos: removeAllDoneToDos(toDosCopy),
-        });
-      default:
-        return state;
+    case 'CHECK_LOCAL_STORAGE_FOR_TODOS':
+      return Object.assign({}, state, {
+        toDos: getLocalState(),
+      });
+    case 'SET_LOCAL_STORAGE':
+      localStorage.setItem('toDoItems', JSON.stringify(state.toDos));
+      return state;
+    case 'ADD_TODO':
+      return Object.assign({}, state, {
+        toDos: addToDo(toDosCopy, action.content),
+      });
+    case 'TOGGLE_TODO':
+      return Object.assign({}, state, {
+        toDos: toggleToDo(toDosCopy, action.id),
+      });
+    case 'REMOVE_TODO':
+      return Object.assign({}, state, {
+        toDos: removeToDo(toDosCopy, action.id),
+      });
+    case 'CHANGE_FILTER':
+      return Object.assign({}, state, {
+        filter: action.filter,
+      });
+    case 'REMOVE_ALL_DONE_TODOS':
+      return Object.assign({}, state, {
+        toDos: removeAllDoneToDos(toDosCopy),
+      });
+    default:
+      return state;
     }
   }
 
@@ -72,7 +73,7 @@ var toDoApp = (function(redax) {
   function toggleToDo(toDos, eventId) {
     for(var i = 0; i < toDos.length; i++) {
       if(eventId === toDos[i].id) {
-        toDos[i].done = !toDos[i].done
+        toDos[i].done = !toDos[i].done;
       }
     }
     return toDos;
@@ -83,7 +84,7 @@ var toDoApp = (function(redax) {
       if (currentValue.done) {
         return accumulator;
       } else {
-        return accumulator.concat([currentValue])
+        return accumulator.concat([currentValue]);
       }
     }, []);
   }
@@ -103,7 +104,7 @@ var toDoApp = (function(redax) {
       if (currentValue === null) {
         return accumulator;
       } else {
-        return accumulator.concat([currentValue])
+        return accumulator.concat([currentValue]);
       }
     }, []);
 
@@ -127,37 +128,37 @@ var toDoApp = (function(redax) {
     return content.split(' ').join('');
   }
 
-  function createToDoElement({ content, done, id }) {
+  function createToDoElement(toDo) {
     var div = document.createElement('div');
-    var checkBox = createCheckbox(done, id, handleCheckboxClick);
-    var label = createLabel(content, done, id);
-    var deleteButton = createDeleteButton(id, handleDeleteClick);
+    var checkBox = createCheckbox(toDo, handleCheckboxClick);
+    var label = createLabel(toDo);
+    var deleteButton = createDeleteButton(toDo, handleDeleteClick);
 
     div.appendChild(checkBox);
     div.appendChild(label);
     div.appendChild(deleteButton);
     return div;
-  };
+  }
 
-  function createCheckbox(done, id, listener) {
+  function createCheckbox(toDo, listener) {
     var input = document.createElement('input');
     input.setAttribute('type', 'checkbox');
-    input.setAttribute('id', id);
-    input.checked = done;
+    input.setAttribute('id', toDo.id);
+    input.checked = toDo.done;
     input.addEventListener('change', listener);
     return input;
   }
 
-  function createLabel(content, done, id) {
+  function createLabel(toDo) {
     var label = document.createElement('label');
-    label.setAttribute('for', id);
-    label.innerHTML = (done ? content.strike() : content);
+    label.setAttribute('for', toDo.id);
+    label.innerHTML = (toDo.done ? toDo.content.strike() : toDo.content);
     return label;
   }
 
-  function createDeleteButton(id, listener) {
+  function createDeleteButton(toDo, listener) {
     var deleteButton = document.createElement('button');
-    deleteButton.setAttribute('id', 'delete-' + id);
+    deleteButton.setAttribute('id', 'delete-' + toDo.id);
     deleteButton.innerHTML = '&#10005;';
     deleteButton.addEventListener('click', listener);
     return deleteButton;
@@ -176,9 +177,9 @@ var toDoApp = (function(redax) {
   }
 
   function renderButtonHighlight(filter) {
-    for (var button of buttons) {
+    buttons.forEach(function(button) {
       button.className = '';
-    }
+    });
     if (filter === 'DONE') {
       buttonCompleted.className = 'active';
     } else if (filter === 'NOT_DONE') {
@@ -221,7 +222,7 @@ var toDoApp = (function(redax) {
     }
   }
 
-  function handleRemoveAllDone(event) {
+  function handleRemoveAllDone() {
     store.dispatch({ type: 'REMOVE_ALL_DONE_TODOS' });
     store.dispatch({ type: 'SET_LOCAL_STORAGE' });
   }
@@ -241,7 +242,7 @@ var toDoApp = (function(redax) {
       createDeleteButton: createDeleteButton,
       createLabel: createLabel,
       createCheckbox: createCheckbox,
-      createToDoElement, createToDoElement,
+      createToDoElement: createToDoElement,
       createId: createId,
       addToDo: addToDo,
       removeToDo: removeToDo,
@@ -249,8 +250,8 @@ var toDoApp = (function(redax) {
       reducer: reducer,
       filterToDos: filterToDos,
       removeAllDoneToDos: removeAllDoneToDos,
-    }
+    };
   }
 
-})(redax)
+})(redax);
 

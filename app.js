@@ -130,6 +130,7 @@ var toDoApp = (function(redax) {
 
   function createToDoElement(toDo) {
     var div = document.createElement('div');
+    div.setAttribute('class', 'to-do-item');
     var checkBox = createCheckbox(toDo, handleCheckboxClick);
     var label = createLabel(toDo);
     var deleteButton = createDeleteButton(toDo, handleDeleteClick);
@@ -143,6 +144,7 @@ var toDoApp = (function(redax) {
   function createCheckbox(toDo, listener) {
     var input = document.createElement('input');
     input.setAttribute('type', 'checkbox');
+    input.setAttribute('class', 'checkbox');
     input.setAttribute('id', toDo.id);
     input.checked = toDo.done;
     input.addEventListener('change', listener);
@@ -159,6 +161,7 @@ var toDoApp = (function(redax) {
   function createDeleteButton(toDo, listener) {
     var deleteButton = document.createElement('button');
     deleteButton.setAttribute('id', 'delete-' + toDo.id);
+    deleteButton.setAttribute('class', 'delete-button');
     deleteButton.innerHTML = '&#10005;';
     deleteButton.addEventListener('click', listener);
     return deleteButton;
@@ -178,14 +181,14 @@ var toDoApp = (function(redax) {
 
   function renderButtonHighlight(filter) {
     buttons.forEach(function(button) {
-      button.className = '';
+      button.setAttribute('class', '');
     });
     if (filter === 'DONE') {
-      buttonCompleted.className = 'active';
+      buttonCompleted.setAttribute('class', 'active');
     } else if (filter === 'NOT_DONE') {
-      buttonActive.className = 'active';
+      buttonActive.setAttribute('class', 'active');
     } else {
-      buttonAll.className = 'active';
+      buttonAll.setAttribute('class', 'active');
     }
   }
 
@@ -228,6 +231,7 @@ var toDoApp = (function(redax) {
   }
 
   toDoForm.addEventListener('submit', handleSubmit);
+  toDoForm.addEventListener('focusout', handleSubmit);
   buttonAll.addEventListener('click', handleFilterButtonClick);
   buttonActive.addEventListener('click', handleFilterButtonClick);
   buttonCompleted.addEventListener('click', handleFilterButtonClick);

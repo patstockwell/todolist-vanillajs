@@ -48,6 +48,8 @@ button {
 
 #button-panel {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
 #button-remove-all-done {
@@ -66,7 +68,7 @@ button {
 }
 
 .to-do-item {
-  padding: 8px;
+  padding: 8px 0;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #eee;
@@ -77,8 +79,8 @@ button {
 }
 
 label {
-  font-size: 22px;
-  flex-basis: 85%;
+  font-size: 18px;
+  flex-basis: 86%;
 }
 
 strike {

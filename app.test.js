@@ -93,10 +93,20 @@ if (typeof toDoApp === 'object') {
 
     (function() {
       var oldState = [
+        { content: 'harry potter', id: 'harry-potter-id', deleted: false },
+      ];
+      var newState = toDoApp.removeToDo(oldState, 'harry-potter-id');
+      expect(newState.length).toEqual(1);
+      expect(newState).toEqual([{ content: 'harry potter', id: 'harry-potter-id', deleted: true }]);
+      console.log('✔', 'removeToDo() should return the correct state object');
+    })();
+
+    (function() {
+      var oldState = [
         { content: 'peter pan' },
         { content: 'alice' },
         { content: 'lee lin chin' },
-        { content: 'harry potter', id: 'harry-potter-id' },
+        { content: 'harry potter', id: 'harry-potter-id', deleted: true },
         { content: 'luke skywalker' },
       ];
       var newState = toDoApp.removeToDo(oldState, 'harry-potter-id');
@@ -115,14 +125,14 @@ if (typeof toDoApp === 'object') {
     (function() {
       var oldState = {
         toDos: [
-          { done: false, content: 'learn javascript', id: 'learnjavascript890' },
+          { done: false, deleted: false, content: 'learn javascript', id: 'learnjavascript890' },
         ],
       };
       var newState = toDoApp.reducer(oldState, { type: 'ADD_TODO', content: 'pass this test' });
       expect(newState).toEqual({
         toDos: [
-          { done: false, content: 'learn javascript', id: 'learnjavascript890'},
-          { done: false, content: 'pass this test', id: 'passthistest'},
+          { done: false, deleted: false, content: 'learn javascript', id: 'learnjavascript890'},
+          { done: false, deleted: false, content: 'pass this test', id: 'passthistest'},
         ],
       });
       console.log('✔', 'reducer() ADD_TODO should return the correct state object');
@@ -146,14 +156,14 @@ if (typeof toDoApp === 'object') {
     (function() {
       var oldState = {
         toDos: [
-          { done: false, content: 'learn javascript', id: 'learnjavascript890' },
-          { done: false, content: 'clean the kitchen', id: 'cleanthekitchen' },
+          { done: false, content: 'learn javascript', id: 'learnjavascript890', deleted: true },
+          { done: false, content: 'clean the kitchen', id: 'cleanthekitchen', deleted: true },
         ],
       };
       var newState = toDoApp.reducer(oldState, { type: 'REMOVE_TODO', id: 'cleanthekitchen' });
       expect(newState).toEqual({
         toDos: [
-          { done: false, content: 'learn javascript', id: 'learnjavascript890'},
+          { done: false, content: 'learn javascript', id: 'learnjavascript890', deleted: true },
         ],
       });
       console.log('✔', 'reducer() REMOVE_TODO should return the correct state object');

@@ -56,6 +56,7 @@ var toDoApp = (function(redax) {
   function addToDo(toDos, content) {
     return toDos.concat([{
       done: false,
+      deleted: false,
       content: content,
       id: createId(content),
     }]);
@@ -64,7 +65,11 @@ var toDoApp = (function(redax) {
   function removeToDo(toDos, eventId) {
     for (var i = 0; i < toDos.length; i++) {
       if(eventId === toDos[i].id){
-        return toDos.slice(0, i).concat(toDos.slice(i + 1));
+        if (toDos[i].deleted) {
+          return toDos.slice(0, i).concat(toDos.slice(i + 1));
+        } else {
+          toDos[i].deleted = true;
+        }
       }
     }
     return toDos;
@@ -91,11 +96,13 @@ var toDoApp = (function(redax) {
 
   function filterToDos(state) {
     var filteredToDos = state.toDos.map(function(toDo) {
-      if (state.filter === 'NONE') {
+      if (state.filter === 'NONE' && !toDo.deleted) {
         return toDo;
-      } else if (state.filter === 'DONE' && toDo.done) {
+      } else if (state.filter === 'DONE' && toDo.done && !toDo.deleted) {
         return toDo;
-      } else if (state.filter === 'NOT_DONE' && !toDo.done) {
+      } else if (state.filter === 'NOT_DONE' && !toDo.done && !toDo.deleted) {
+        return toDo;
+      } else if (state.filter === 'REMOVED' && toDo.deleted) {
         return toDo;
       } else {
         return null;
@@ -121,8 +128,9 @@ var toDoApp = (function(redax) {
   var buttonAll = document.getElementById('button-all');
   var buttonActive = document.getElementById('button-active');
   var buttonCompleted = document.getElementById('button-completed');
+  var buttonRemoved = document.getElementById('button-removed');
   var buttonRemoveAllDone = document.getElementById('button-remove-all-done');
-  var buttons = [ buttonAll, buttonActive, buttonCompleted ];
+  var buttons = [ buttonAll, buttonActive, buttonCompleted, buttonRemoved ];
 
   function createId(content) {
     return content.split(' ').join('');
@@ -187,6 +195,8 @@ var toDoApp = (function(redax) {
       buttonCompleted.setAttribute('class', 'active');
     } else if (filter === 'NOT_DONE') {
       buttonActive.setAttribute('class', 'active');
+    } else if (filter === 'REMOVED') {
+      buttonRemoved.setAttribute('class', 'active');
     } else {
       buttonAll.setAttribute('class', 'active');
     }
@@ -220,6 +230,8 @@ var toDoApp = (function(redax) {
       store.dispatch({ type: 'CHANGE_FILTER', filter: 'NONE' });
     } else if (id === 'button-active') {
       store.dispatch({ type: 'CHANGE_FILTER', filter: 'NOT_DONE' });
+    } else if (id === 'button-removed') {
+      store.dispatch({ type: 'CHANGE_FILTER', filter: 'REMOVED' });
     } else {
       store.dispatch({ type: 'CHANGE_FILTER', filter: 'DONE' });
     }
@@ -235,6 +247,7 @@ var toDoApp = (function(redax) {
   buttonAll.addEventListener('click', handleFilterButtonClick);
   buttonActive.addEventListener('click', handleFilterButtonClick);
   buttonCompleted.addEventListener('click', handleFilterButtonClick);
+  buttonRemoved.addEventListener('click', handleFilterButtonClick);
   buttonRemoveAllDone.addEventListener('click', handleRemoveAllDone);
 
   // register the render method with redax store

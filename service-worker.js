@@ -32,7 +32,7 @@ self.addEventListener('activate', function(event) {
 function fromNetwork(request, milliseconds) {
   return new Promise(function(resolve, reject) {
     var timeout = setTimeout(reject, milliseconds);
-    return fetch(request)
+    fetch(request)
       .then(function(response) {
         clearTimeout(timeout);
         return resolve(response);
@@ -55,8 +55,7 @@ function fromCache(request) {
 }
 
 self.addEventListener('fetch', function(event) {
-  console.log('The service worker is serving the asset');
-  event.respondWith(fromNetwork(event.request, 400)
+  event.respondWith(fromNetwork(event.request, 1000)
     .catch(function() {
       return fromCache(event.request);
     }));

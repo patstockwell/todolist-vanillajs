@@ -63,8 +63,9 @@ button {
 }
 
 .active {
-  background-color: #00ffff;
+  background-color: #0098db;
   border-radius: 5px;
+  color: white;
 }
 
 .to-do-item {

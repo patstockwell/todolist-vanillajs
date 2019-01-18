@@ -32,10 +32,10 @@ self.addEventListener('activate', function(event) {
 function fromNetwork(request, milliseconds) {
   return new Promise(function(resolve, reject) {
     var timeout = setTimeout(reject, milliseconds);
-    fetch(request)
+    return fetch(request)
       .then(function(response) {
         clearTimeout(timeout);
-        resolve(response);
+        return resolve(response);
       });
   });
 }

@@ -1,3 +1,16 @@
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    console.log('attempting to install service worker');
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('ServiceWorker registration failed: ', error);
+      });
+  });
+}
+
 /* exported toDoApp */
 var toDoApp = (function(redax) {
   var RUN_UNIT_TESTS = false;

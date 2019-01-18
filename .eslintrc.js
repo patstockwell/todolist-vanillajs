@@ -1,6 +1,7 @@
 module.exports = {
   "globals": {
     "redax": true,
+    "Promise": true,
     "toDoApp": true
   },
   "env": {

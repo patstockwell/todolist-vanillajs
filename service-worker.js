@@ -4,6 +4,7 @@ var urlsToCache = [
   'style.css',
   'app.js',
   'redax.js',
+  'app.test.js',
 ];
 
 self.addEventListener('install', function(event) {

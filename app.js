@@ -52,7 +52,7 @@ var toDoApp = (function(redax) {
       });
     case 'REMOVE_ALL_DONE_TODOS':
       return Object.assign({}, state, {
-        toDos: removeAllDoneToDos(toDosCopy),
+        toDos: removeAllDoneToDos(toDosCopy, state.filter),
       });
     default:
       return state;
@@ -97,9 +97,12 @@ var toDoApp = (function(redax) {
     return toDos;
   }
 
-  function removeAllDoneToDos(toDos) {
+  function removeAllDoneToDos(toDos, filter) {
     return toDos.reduce(function(accumulator, currentValue) {
-      if (currentValue.done) {
+      if ((filter === 'NONE' || filter === 'DONE') && currentValue.done && !currentValue.deleted) {
+        currentValue.deleted = true;
+        return accumulator.concat([currentValue]);
+      } else if (filter === 'REMOVED' && currentValue.deleted) {
         return accumulator;
       } else {
         return accumulator.concat([currentValue]);

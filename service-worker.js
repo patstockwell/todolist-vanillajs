@@ -46,17 +46,15 @@ function fromCache(request) {
       return cache.match(request);
     })
     .then(function(cachedAsset) {
-      return cachedAsset;
-    })
-    .catch(function(error) {
-      console.log('Couldn\'t find the cached asset.'
-        + 'Please wait for a network connection', error);
+      return cachedAsset || Promise.reject('no-match');
     });
 }
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(fromNetwork(event.request, 1000)
-    .catch(function() {
+    .catch(function(error) {
+      console.log('Couldn\'t find the cached asset.'
+        + 'Please wait for a network connection', error);
       return fromCache(event.request);
     }));
 });

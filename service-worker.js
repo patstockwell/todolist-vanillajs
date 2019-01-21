@@ -37,7 +37,10 @@ function fromNetwork(request, milliseconds) {
       .then(function(response) {
         clearTimeout(timeout);
         return resolve(response);
-      });
+      })
+      .catch(function(error) {
+        return reject(error);
+      })
   });
 }
 
@@ -54,9 +57,15 @@ function fromCache(request) {
 self.addEventListener('fetch', function(event) {
   event.respondWith(fromNetwork(event.request, 1000)
     .catch(function(error) {
-      console.log('Couldn\'t find the cached asset.'
-        + 'Please wait for a network connection', error);
+      console.log('Couldn\'t get the file from the network.'
+        + 'Attempting to use the cached asset.', error);
+    })
+    .then(function() {
       return fromCache(event.request);
-    }));
+    })
+    .catch(function(error) {
+      console.log('Couldn\'t get the file from the cache:', error);
+    })
+  );
 });
 

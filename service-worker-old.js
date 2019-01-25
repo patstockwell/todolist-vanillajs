@@ -40,7 +40,7 @@ function fromNetwork(request, milliseconds) {
       })
       .catch(function(error) {
         return reject(error);
-      })
+      });
   });
 }
 

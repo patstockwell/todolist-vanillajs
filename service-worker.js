@@ -30,42 +30,9 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-function fromNetwork(request, milliseconds) {
-  return new Promise(function(resolve, reject) {
-    var timeout = setTimeout(reject, milliseconds);
-    fetch(request)
-      .then(function(response) {
-        clearTimeout(timeout);
-        return resolve(response);
-      })
-      .catch(function(error) {
-        return reject(error);
-      })
-  });
-}
-
-function fromCache(request) {
-  return caches.open(CACHE_NAME)
-    .then(function(cache) {
-      return cache.match(request);
-    })
-    .then(function(cachedAsset) {
-      return cachedAsset || Promise.reject('no-match');
-    });
-}
-
-self.addEventListener('fetch', function(event) {
-  event.respondWith(fromNetwork(event.request, 1000)
-    .catch(function(error) {
-      console.log('Couldn\'t get the file from the network.'
-        + 'Attempting to use the cached asset.', error);
-    })
-    .then(function() {
-      return fromCache(event.request);
-    })
-    .catch(function(error) {
-      console.log('Couldn\'t get the file from the cache:', error);
-    })
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  event.respondWith(
+    caches.match(event.request).then(r => r || fetch(event.request))
   );
 });
-

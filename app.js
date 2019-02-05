@@ -98,20 +98,25 @@ var toDoApp = (function(redax) {
   }
 
   function removeAllDoneToDos(toDos, filter) {
-    return toDos.reduce(function(accumulator, currentValue) {
-      if ((filter === 'NONE' || filter === 'DONE') && currentValue.done && !currentValue.deleted) {
-        currentValue.deleted = true;
-        return accumulator.concat([currentValue]);
-      } else if (filter === 'REMOVED' && currentValue.deleted) {
-        return accumulator;
-      } else {
-        return accumulator.concat([currentValue]);
-      }
-    }, []);
+    if (filter === 'REMOVED') {
+      const filteredtodos = toDos.filter(function(toDo) {
+        if (!toDo.deleted) {
+          return toDo;
+        }
+      });
+      return filteredtodos;
+    } else {
+      return toDos.map(function(toDo) {
+        if (toDo.done) {
+          toDo.deleted = true;
+        }
+        return toDo;
+      });
+    }
   }
 
   function filterToDos(state) {
-    var filteredToDos = state.toDos.map(function(toDo) {
+    return state.toDos.filter(function(toDo) {
       if (state.filter === 'NONE' && !toDo.deleted) {
         return toDo;
       } else if (state.filter === 'DONE' && toDo.done && !toDo.deleted) {
@@ -120,18 +125,8 @@ var toDoApp = (function(redax) {
         return toDo;
       } else if (state.filter === 'REMOVED' && toDo.deleted) {
         return toDo;
-      } else {
-        return null;
       }
-    }).reduce(function(accumulator, currentValue) {
-      if (currentValue === null) {
-        return accumulator;
-      } else {
-        return accumulator.concat([currentValue]);
-      }
-    }, []);
-
-    return filteredToDos;
+    });
   }
 
   var store = redax.createStore(reducer);

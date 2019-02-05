@@ -226,12 +226,13 @@ if (typeof toDoApp === 'object') {
 
     (function() {
       var allToDos = [
-        { done: false, content: 'learn javascript', id: 'learnjavascript'},
-        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
+        { deleted: false, done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { deleted: false, done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
       ];
-      var clearedToDos = toDoApp.removeAllDoneToDos(allToDos);
+      var clearedToDos = toDoApp.removeAllDoneToDos(allToDos, 'NONE');
       expect(clearedToDos).toEqual([
-        { done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { deleted: false, done: false, content: 'learn javascript', id: 'learnjavascript'},
+        { deleted: true, done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
       ]);
       console.log('✔', 'removeAllDoneToDos() should remove all completed toDos from the array');
     })();

@@ -1,4 +1,4 @@
-var CACHE_NAME = 'to-do-site-cache-v1';
+var cacheName = 'to-do-site-cache-v1';
 var urlsToCache = [
   '/',
   'style.css',
@@ -9,7 +9,7 @@ var urlsToCache = [
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(cacheName)
       .then(function(cache) {
         return cache.addAll(urlsToCache);
       })
@@ -20,10 +20,10 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          return cacheName != CACHE_NAME;
-        }).map(function(cacheName) {
-          return caches.delete(cacheName);
+        cacheNames.filter(function(name) {
+          return name != cacheName;
+        }).map(function(name) {
+          return caches.delete(name);
         })
       );
     })
@@ -31,7 +31,6 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
   event.respondWith(
     caches.match(event.request).then(r => r || fetch(event.request))
   );

@@ -86,7 +86,7 @@ if (typeof toDoApp === 'object') {
       var newState = toDoApp.addToDo(oldState, 'wonder woman');
       expect(newState.length).toEqual(4);
       expect(newState[3].content).toEqual('wonder woman');
-      expect(newState[3].id).toEqual('wonderwoman');
+      expect(/wonderwoman/.test(newState[3].id)).toEqual(true);
       expect(newState[3].done).toEqual(false);
       console.log('✔', 'addToDo() should return the correct state object');
     })();
@@ -179,49 +179,45 @@ if (typeof toDoApp === 'object') {
     })();
 
     (function() {
-      var oldState = {
-        filter: 'NONE',
-        toDos: [
-          { done: false, content: 'learn javascript', id: 'learnjavascript'},
-          { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
-        ],
-      };
-      var filteredToDos = toDoApp.filterToDos(oldState);
-      expect(filteredToDos).toEqual([
-        { done: false, content: 'learn javascript', id: 'learnjavascript'},
-        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
-      ]);
-      console.log('✔', 'filterToDos() NONE should return an unfiltered array of toDos');
+      var todo = { done: false, content: 'learn javascript', id: 'learnjavascript' };
+      var viewableTodo = toDoApp.isViewable('NONE')(todo);
+      expect(viewableTodo).toEqual(true);
+      console.log('✔', 'isViewable() with filter NONE should return the toDo');
     })();
 
     (function() {
-      var oldState = {
-        filter: 'DONE',
-        toDos: [
-          { done: false, content: 'learn javascript', id: 'learnjavascript'},
-          { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
-        ],
-      };
-      var filteredToDos = toDoApp.filterToDos(oldState);
-      expect(filteredToDos).toEqual([
-        { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
-      ]);
-      console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
+      var todo = { done: true, content: 'learn javascript', id: 'learnjavascript' };
+      var viewableTodo = toDoApp.isViewable('NONE')(todo);
+      expect(viewableTodo).toEqual(true);
+      console.log('✔', 'isViewable() with filter DONE should return true when todo is done');
     })();
 
     (function() {
-      var oldState = {
-        filter: 'NOT_DONE',
-        toDos: [
-          { done: false, content: 'learn javascript', id: 'learnjavascript'},
-          { done: true, content: 'clean the kitchen', id: 'cleanthekitchen' },
-        ],
-      };
-      var filteredToDos = toDoApp.filterToDos(oldState);
-      expect(filteredToDos).toEqual([
-        { done: false, content: 'learn javascript', id: 'learnjavascript'},
-      ]);
-      console.log('✔', 'filterToDos() DONE should return an unfiltered array of toDos');
+      var todo = { done: false, content: 'learn javascript', id: 'learnjavascript' };
+      var viewableTodo = toDoApp.isViewable('DONE')(todo);
+      expect(viewableTodo).toEqual(false);
+      console.log('✔', 'isViewable() with filter DONE should return false when todo is not done');
+    })();
+
+    (function() {
+      var todo = { done: false, content: 'learn javascript', id: 'learnjavascript' };
+      var viewableTodo = toDoApp.isViewable('NOT_DONE')(todo);
+      expect(viewableTodo).toEqual(true);
+      console.log('✔', 'isViewable() with filter NOT_DONE should return true when todo is not done');
+    })();
+
+    (function() {
+      var todo = { done: true, content: 'learn javascript', id: 'learnjavascript' };
+      var viewableTodo = toDoApp.isViewable('NOT_DONE')(todo);
+      expect(viewableTodo).toEqual(false);
+      console.log('✔', 'isViewable() with filter NOT_DONE should return false when todo is done');
+    })();
+
+    (function() {
+      var todo = { deleted: true, done: true, content: 'learn javascript', id: 'learnjavascript' };
+      var viewableTodo = toDoApp.isViewable('REMOVED')(todo);
+      expect(viewableTodo).toEqual(true);
+      console.log('✔', 'isViewable() with filter REMOVED should return true when todo is deleted');
     })();
 
     (function() {

@@ -24,7 +24,7 @@ var toDoApp = (function(redax) {
       };
     }
 
-    var toDosCopy = state.toDos.slice();
+    var toDos = state.toDos;
 
     switch (action.type) {
     case 'CHECK_LOCAL_STORAGE_FOR_TODOS':
@@ -32,19 +32,19 @@ var toDoApp = (function(redax) {
         toDos: getLocalState(),
       });
     case 'SET_LOCAL_STORAGE':
-      localStorage.setItem('toDoItems', JSON.stringify(state.toDos));
+      localStorage.setItem('toDoItems', JSON.stringify(toDos));
       return state;
     case 'ADD_TODO':
       return Object.assign({}, state, {
-        toDos: addToDo(toDosCopy, action.content),
+        toDos: addToDo(toDos, action.content),
       });
     case 'TOGGLE_TODO':
       return Object.assign({}, state, {
-        toDos: toggleToDo(toDosCopy, action.id),
+        toDos: toggleToDo(toDos, action.id),
       });
     case 'REMOVE_TODO':
       return Object.assign({}, state, {
-        toDos: removeToDo(toDosCopy, action.id),
+        toDos: removeToDo(toDos, action.id),
       });
     case 'CHANGE_FILTER':
       return Object.assign({}, state, {
@@ -52,7 +52,7 @@ var toDoApp = (function(redax) {
       });
     case 'REMOVE_ALL_DONE_TODOS':
       return Object.assign({}, state, {
-        toDos: removeAllDoneToDos(toDosCopy, state.filter),
+        toDos: removeAllDoneToDos(toDos, state.filter),
       });
     default:
       return state;
@@ -76,35 +76,30 @@ var toDoApp = (function(redax) {
   }
 
   function removeToDo(toDos, eventId) {
-    for (var i = 0; i < toDos.length; i++) {
-      if(eventId === toDos[i].id){
-        if (toDos[i].deleted) {
-          return toDos.slice(0, i).concat(toDos.slice(i + 1));
-        } else {
-          toDos[i].deleted = true;
-        }
-      }
-    }
-    return toDos;
+    return toDos
+    // remove the todo if it is marked deleted
+      .filter(t => t.id !== eventId || !t.deleted)
+    // else mark it as deleted
+      .map(t => t.id === eventId ? {
+        ...t,
+        deleted: true,
+      } : t);
   }
 
   function toggleToDo(toDos, eventId) {
-    for(var i = 0; i < toDos.length; i++) {
-      if(eventId === toDos[i].id) {
-        toDos[i].done = !toDos[i].done;
-      }
-    }
-    return toDos;
+    return toDos.map(t => t.id === eventId ? {
+      ...t,
+      done: !t.done,
+    } : t);
   }
 
   function removeAllDoneToDos(toDos, filter) {
     if (filter === 'REMOVED') {
-      const filteredtodos = toDos.filter(function(toDo) {
+      return toDos.filter(function(toDo) {
         if (!toDo.deleted) {
           return toDo;
         }
       });
-      return filteredtodos;
     } else {
       return toDos.map(function(toDo) {
         if (toDo.done) {
@@ -115,18 +110,13 @@ var toDoApp = (function(redax) {
     }
   }
 
-  function filterToDos(state) {
-    return state.toDos.filter(function(toDo) {
-      if (state.filter === 'NONE' && !toDo.deleted) {
-        return toDo;
-      } else if (state.filter === 'DONE' && toDo.done && !toDo.deleted) {
-        return toDo;
-      } else if (state.filter === 'NOT_DONE' && !toDo.done && !toDo.deleted) {
-        return toDo;
-      } else if (state.filter === 'REMOVED' && toDo.deleted) {
-        return toDo;
-      }
-    });
+  function isViewable(filter) {
+    return function(toDo) {
+      return filter === 'NONE' && !toDo.deleted
+        || filter === 'DONE' && toDo.done && !toDo.deleted
+        || filter === 'NOT_DONE' && !toDo.done && !toDo.deleted
+        || filter === 'REMOVED' && toDo.deleted;
+    }
   }
 
   var store = redax.createStore(reducer);
@@ -144,7 +134,7 @@ var toDoApp = (function(redax) {
   var buttons = [ buttonAll, buttonActive, buttonCompleted, buttonRemoved ];
 
   function createId(content) {
-    return content.split(' ').join('');
+    return content.split(' ').join('')
   }
 
   function createToDoElement(toDo) {
@@ -188,10 +178,9 @@ var toDoApp = (function(redax) {
 
   function render(state) {
     rootElement.innerHTML = '';
-    filterToDos(state)
-      .map(function(toDo) {
-        return createToDoElement(toDo);
-      })
+    state.toDos
+      .filter(isViewable(state.filter))
+      .map(createToDoElement)
       .forEach(function(element) {
         rootElement.appendChild(element);
       });
@@ -276,7 +265,7 @@ var toDoApp = (function(redax) {
       removeToDo: removeToDo,
       toggleToDo: toggleToDo,
       reducer: reducer,
-      filterToDos: filterToDos,
+      isViewable: isViewable,
       removeAllDoneToDos: removeAllDoneToDos,
     };
   }
